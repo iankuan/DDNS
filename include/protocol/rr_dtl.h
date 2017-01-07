@@ -5,8 +5,8 @@
  *          leads to different DATA format.
  *              Reference: https://www.ietf.org/rfc/rfc1035.txt
  */
-#include "type.h"
-#include "std_rr.h"
+#include "../type.h"
+//#include "std_rr.h"
 
 /**
  * 3.2.2. TYPE values
@@ -33,7 +33,7 @@
  *  MX 15 mail exchange
  *  TXT 16 text strings
  */
-typedef enum {
+/*typedef enum {
     _A       = 1;
     _NS      = 2;
     _MD      = 3;
@@ -50,7 +50,7 @@ typedef enum {
     _MINFO   =14;
     _MX      =15;
     _TXT     =16;
-} RR_TYPE_t;
+} RR_TYPE_t;*/
 
 /**
  * 3.2.3. QTYPE values
@@ -64,7 +64,7 @@ typedef enum {
  * MAILA 254 A request for mail agent RRs (Obsolete - see MX)
  * *     255 A request for all records
  */
-/*typedef enum {
+typedef enum {
     _A       =  1;
     _NS      =  2;
     _MD      =  3;
@@ -85,7 +85,10 @@ typedef enum {
     _MAILB   =253;
     _MAILA   =254;
     _*       =255;
-} RR_QTYPE_t;*/
+} RR_QTYPE_t;
+
+///FIXME: Not felixable
+typedef RR_QTYPE_t RR_TYPE_t;
 
 /**
  * 3.2.4. CLASS values
@@ -100,12 +103,12 @@ typedef enum {
  *  CH 3 the CHAOS class
  *  HS 4 Hesiod [Dyer 87]
  */
-typedef enum {
+/*typedef enum {
     _IN = 1;
     _CS = 2;
     _CH = 3;
     _HS = 4;
-} RR_CLASS_t;
+} RR_CLASS_t;*/
 
 /**
  * 3.2.5. QCLASS values
@@ -116,10 +119,13 @@ typedef enum {
  * 
  * *  255 any class
  */
-/*typedef enum {
+typedef enum {
     _IN = 1;
     _CS = 2;
     _CH = 3;
     _HS = 4;
     _* =255;
-} RR_QCLASS_t;*/
+} RR_QCLASS_t;
+
+///FIXME: Not felixable
+ typedef RR_QCLASS_t RR_CLASS_t;
