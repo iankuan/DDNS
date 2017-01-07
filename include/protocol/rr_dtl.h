@@ -1,5 +1,15 @@
 /**
- * TYPE values
+ * @file: the Detail of Resoure Record
+ *
+ * @brief: The distribution of the protocol depended on the different TYPE
+ *          leads to different DATA format.
+ *              Reference: https://www.ietf.org/rfc/rfc1035.txt
+ */
+#include "type.h"
+#include "std_rr.h"
+
+/**
+ * 3.2.2. TYPE values
  *
  * TYPE fields are used in resource records.
  * subset of QTYPEs.
@@ -43,7 +53,7 @@ typedef enum {
 } RR_TYPE_t;
 
 /**
- * QTYPE values
+ * 3.2.3. QTYPE values
  *
  * QTYPE fields appear in the question part of a query.
  * superset of TYPEs, hence all TYPEs are valid QTYPEs.
@@ -78,7 +88,7 @@ typedef enum {
 } RR_QTYPE_t;*/
 
 /**
- * CLASS values
+ * 3.2.4. CLASS values
  *
  * CLASS fields appear in resource records.
  * and values are defined:
@@ -98,7 +108,7 @@ typedef enum {
 } RR_CLASS_t;
 
 /**
- * QCLASS values
+ * 3.2.5. QCLASS values
  *
  * QCLASS fields appear in the question section of a query. QCLASS values
  * are a superset of CLASS values; every CLASS is a valid QCLASS. In
@@ -106,133 +116,10 @@ typedef enum {
  * 
  * *  255 any class
  */
-typedef enum {
+/*typedef enum {
     _IN = 1;
     _CS = 2;
     _CH = 3;
     _HS = 4;
     _* =255;
-} RR_QCLASS_t;
-
-///TTL
-/**
- * Address (A) RRs
- * 
- * Address (A) records match domain names to IP address, and are both the most important and the most mundane aspect of DNS. See RFC 1035 §3.4.1 for a more detailed description of the A RR, though there is really very little to describe. The data section consists entirely of a 32-bit IP address. Most DNS operations are queries for A records matching a given domain name. Since hosts can have multiple IP addresses, corresponding to multiple physical network interfaces, so it is permissible for multiple A records to match a given domain name. Normally, only the first one is used, so chose a host's most reliable IP address and put it first when constructing name server databases.
- * 
- *     +--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+
- *     |                    ADDRESS                    |
- *     +--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+
- * 
- * where: 
- * 
- * ADDRESS         A 32 bit Internet address.
- */
-typedef u32_t A_t;
-
-/**
- * Canonical Name (CNAME) RR
- * 
- * Canonical Names (CNAMEs) are the DNS equivalent of aliases or symbolic links. The data field contains another fully-qualified DNS name, which should be used as the target of another DNS operation to acquire the desired information. However, a second lookup is rarely required, since most name servers will provide the additional records as part of the reply. See RFC 1035 §3.3.1 for a more detailed description of the CNAME RR.
- * 
- *     +--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+
- *     /                     CNAME                     /
- *     /                                               /
- *     +--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+
- * 
- * where: 
- * 
- * CNAME           A <domain-name> which specifies the canonical or primary
- *                 name for the owner.  The owner name is an alias.
- */
-typedef char CNAME_t[NAME_LIMIT];
-
-
-/**
- * Pointer (PTR) RR
- * 
- * Pointers (PTRs) are like CNAMEs in their format - the data area contains a domain name. The difference between CNAMEs and PTRs is purely one of semantics. A CNAME specifies an alias, a PTR merely points to another location in the domain name space. The most important use of PTRs is to construct the in-addr.arpa domain, used to convert IP addresses to DNS names (the reverse of the normal process). See RFC 1035 §3.3.12 for a more detailed description of the PTR RR, and RFC 1035 »3.5 for a explanation of the in-addr.arpa domain.
- * 
- *     +--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+
- *     /                   PTRDNAME                    /
- *     +--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+
- * 
- * where: 
- * 
- * PTRDNAME        A <domain-name> which points to some location in the
- *                 domain name space.
- */
-
-/**
- * Start of Authority (SOA) RR
- * 
- * A Start of Authority SOA RR marks the beginning of a DNS zone, and is typically seen as the first record in a name server for that domain. The encyclopedia's discussion of name servers explains the various fields. See RFC 1035 §3.3.13 for a more detailed description of the SOA RR.
- * 
- *     +--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+
- *     /                     MNAME                     /
- *     /                                               /
- *     +--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+
- *     /                     RNAME                     /
- *     +--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+
- *     |                    SERIAL                     |
- *     |                                               |
- *     +--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+
- *     |                    REFRESH                    |
- *     |                                               |
- *     +--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+
- *     |                     RETRY                     |
- *     |                                               |
- *     +--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+
- *     |                    EXPIRE                     |
- *     |                                               |
- *     +--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+
- *     |                    MINIMUM                    |
- *     |                                               |
- *     +--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+
- * 
- * where: 
- * 
- * MNAME           The <domain-name> of the name server that was the
- *                 original or primary source of data for this zone.
- * 
- * RNAME           A <domain-name> which specifies the mailbox of the
- *                 person responsible for this zone.
- * 
- * SERIAL          The unsigned 32 bit version number of the original copy
- *                 of the zone.  Zone transfers preserve this value.  This
- *                 value wraps and should be compared using sequence space
- *                 arithmetic.
- * 
- * REFRESH         A 32 bit time interval before the zone should be
- *                 refreshed.
- * 
- * RETRY           A 32 bit time interval that should elapse before a
- *                 failed refresh should be retried.
- * 
- * EXPIRE          A 32 bit time value that specifies the upper limit on
- *                 the time interval that can elapse before the zone is no
- *                 longer authoritative.
- * 
- * MINIMUM         The unsigned 32 bit minimum TTL field that should be
- *                 exported with any RR from this zone.
- */
-
-
-
-/**
- * Name Server (NS) RR
- * 
- * An NS RR marks the beginning of a DNS zone and supplies the domain name of a name server for that zone. It is typically seen in two places - at the top of a zone, just after the SOA; and at the start of a subzone, where an NS (and often a paired A) are all that is required to perform delegation. See RFC 1035 §3.3.11 for a more detailed description of the NS RR.
- * 
- *     +--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+
- *     /                   NSDNAME                     /
- *     /                                               /
- *     +--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+
- * 
- * where: 
- * 
- * NSDNAME         A <domain-name> which specifies a host which should be
- *                 authoritative for the specified class and domain
- */
-
- typedef char _NN_t[NAME_LIMIT];
+} RR_QCLASS_t;*/
