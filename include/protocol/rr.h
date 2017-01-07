@@ -1,6 +1,6 @@
-#include "config_limit.h"
-#include "type.h"
-#include "rr_dtl.h"
+#include "../config_limit.h"
+#include "../type.h"
+//#include "rr_dtl.h"
 
 ///Reference: https://www.ietf.org/rfc/rfc1035.txt
 
@@ -78,7 +78,7 @@
  *  RDLENGTH        an unsigned 16 bit integer that specifies the length in
  *                  octets of the RDATA field.
  */
-typedef uint32_t TTL_t;///ttl
+typedef s32_t TTL_t;///ttl
 
 ///rr_format
 typedef struct _RR {
@@ -87,5 +87,5 @@ typedef struct _RR {
     RR_CLASS_t   class;
     TTL_t   ttl;
     u16_t   rd_len;
-    u16_t   rdata[];
+    u32_t   rdata[0];
 } RR_t;
