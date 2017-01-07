@@ -1,4 +1,8 @@
+#include "message_dtl.h"
+
 /**
+ * 4. MESSAGES
+ *
  * DNS Lookups
  * 
  * Normal resource records lookups are done with UDP. An "intelligent retransmission" is to be used, though one is not specified in the protocol, resulting in a mix of poor strategies with good ones. The protocol itself is stateless; all the information needed is contained in a single message, fully documented in RFC 1035 §4.1, and having the following format:
@@ -21,18 +25,23 @@
  * Additional RRs are records that the name server believes may be useful to the client. The most common use for this field is to supply A (address) records for the name servers listed in the Authority section.
  */
 
-typedef struct _head_sec {
-    u16_t       _ID;
-    int         _QR: 1;
-    int     _Opcode: 4;
-    int         _AA: 1;
-    int         _TC: 1;
-    int         _RD: 1;
-    int         _RA: 1;
-    int          _Z: 3;
-    int      _RCODE: 4;
-    u16_t   _QDCOUNT;
-    u16_t   _ANCOUNT;
-    u16_t   _NSCOUNT;
-    u16_t   _ARCOUNT;
-} head_sec;
+
+/**
+ * Breif the context of the MESSAGE
+ *
+ * @breif:The header section is always present.  The header includes fields that
+ * specify which of the remaining sections are present, and also specify
+ * whether the message is a query or a response, a standard query or some
+ * other opcode, etc.
+ * 
+ * The names of the sections after the header are derived from their use in
+ * standard queries.  The question section contains fields that describe a
+ * question to a name server.  These fields are a query type (QTYPE), a
+ * query class (QCLASS), and a query domain name (QNAME).  The last three
+ * sections have the same format: a possibly empty list of concatenated
+ * resource records (RRs).  The answer section contains RRs that answer the
+ * question; the authority section contains RRs that point toward an
+ * authoritative name server; the additional records section contains RRs
+ * which relate to the query, but are not strictly answers for the
+ * question.
+ */
