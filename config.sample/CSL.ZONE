@@ -1,0 +1,37 @@
+[File "CSL.ZONE"]
+
+CSL.SRI.COM.    IN      SOA     KL.SRI.COM. DLE.STRIPE.SRI.COM. (
+                                870330  ;serial
+                                1800    ;refresh every 30 minutes
+                                600     ;retry every 10 minutes
+                                604800  ;expire after a week
+                                86400   ;default of a day
+                                )
+
+CSL.SRI.COM.    NS              KL.SRI.COM.
+                NS              STRIPE.SRI.COM.
+                A               192.12.33.2
+
+;CSL.SRI.COM hosts
+
+A               CNAME   CSL.SRI.COM.
+B               A       192.12.33.3
+                HINFO   FOONLY-F4       TOPS20
+                WKS     192.12.33.3     TCP TELNET FTP SMTP
+GW              A       10.2.0.2
+                A       192.12.33.1
+                A       128.18.1.1
+                HINFO   PDP-11/23       MOS
+SMELLY          A       192.12.33.4
+                HINFO   IMAGEN          IMAGEN
+SQUIRREL        A       192.12.33.5
+                HINFO   XEROX-1100      INTERLISP
+VENUS           A       192.12.33.7
+                HINFO   SYMBOLICS-3600  LISPM
+HELIUM          A       192.12.33.30
+                HINFO   SUN-3/160       UNIX
+ARGON           A       192.12.33.31
+                HINFO   SUN-3/75        UNIX
+RADON           A       192.12.33.32
+                HINFO   SUN-3/75        UNIX
+

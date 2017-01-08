@@ -1,0 +1,8 @@
+[File "ROOT.SERVERS".  Again, the format of this file is not
+standardized.]
+
+;list of possible root servers
+SRI-NIC.ARPA       10.0.0.51    26.0.0.73
+C.ISI.EDU          10.0.0.52
+BRL-AOS.ARPA       192.5.25.82  192.5.22.82   128.20.1.2
+A.ISI.EDU          26.3.0.103

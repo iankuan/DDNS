@@ -1,0 +1,28 @@
+[File "SRI-CSL-NET.ZONE"]
+
+33.12.192.IN-ADDR.ARPA. IN  SOA KL.SRI.COM  DLE.STRIPE.SRI.COM. (
+                            870404  ;serial
+                            1800    ;refresh every 30 minutes
+                            600     ;retry every 10 minutes
+                            604800  ;expire after a week
+                            86400   ;default of a day
+                            )
+
+33.12.192.IN-ADDR.ARPA. NS      KL.SRI.COM.
+                        NS      STRIPE.SRI.COM.
+                        PTR     GW.CSL.SRI.COM.
+
+; SRI-CSL-NET [192.12.33.0] Address Translations
+
+; SRI.COM Hosts
+2.33.12.192.IN-ADDR.ARPA.       PTR     CSL.SRI.COM.
+
+; CSL.SRI.COM Hosts
+1.33.12.192.IN-ADDR.ARPA.       PTR     GW.CSL.SRI.COM.
+3.33.12.192.IN-ADDR.ARPA.       PTR     B.CSL.SRI.COM.
+4.33.12.192.IN-ADDR.ARPA.       PTR     SMELLY.CSL.SRI.COM.
+5.33.12.192.IN-ADDR.ARPA.       PTR     SQUIRREL.CSL.SRI.COM.
+7.33.12.192.IN-ADDR.ARPA.       PTR     VENUS.CSL.SRI.COM.
+30.33.12.192.IN-ADDR.ARPA.      PTR     HELIUM.CSL.SRI.COM.
+31.33.12.192.IN-ADDR.ARPA.      PTR     ARGON.CSL.SRI.COM.
+32.33.12.192.IN-ADDR.ARPA.      PTR     RADON.CSL.SRI.COM.

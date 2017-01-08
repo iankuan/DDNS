@@ -1,0 +1,29 @@
+[File "SRINET.ZONE"]
+
+18.128.IN-ADDR.ARPA.    IN  SOA  KL.SRI.COM  DLE.STRIPE.SRI.COM. (
+                            870406  ;serial
+                            1800    ;refresh every 30 minutes
+                            600     ;retry every 10 minutes
+                            604800  ;expire after a week
+                            86400   ;default of a day
+                            )
+
+18.128.IN-ADDR.ARPA.    NS      KL.SRI.COM.
+                        NS      STRIPE.SRI.COM.
+                        PTR     GW.CSL.SRI.COM.
+
+; SRINET [128.18.0.0] Address Translations
+
+; SRI.COM Hosts
+1.2.18.128.IN-ADDR.ARPA.        PTR     Blackjack.SRI.COM.
+
+; ISTC.SRI.COM Hosts
+2.4.18.128.IN-ADDR.ARPA.        PTR     joyce.ISTC.SRI.COM.
+6.0.18.128.IN-ADDR.ARPA.        PTR     bozo.ISTC.SRI.COM.
+11.0.18.128.IN-ADDR.ARPA.       PTR     sundae.ISTC.SRI.COM.
+201.0.18.128.IN-ADDR.ARPA.      PTR     tsca.ISTC.SRI.COM.
+203.0.18.128.IN-ADDR.ARPA.      PTR     prmh.ISTC.SRI.COM.
+3.4.18.128.IN-ADDR.ARPA.        PTR     spam.ISTC.SRI.COM.
+
+; CSL.SRI.COM Hosts
+1.1.18.128.IN-ADDR.ARPA.        PTR     GW.CSL.SRI.COM.

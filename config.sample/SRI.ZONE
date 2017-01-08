@@ -1,0 +1,34 @@
+[File "SRI.ZONE"]
+
+SRI.COM.        IN      SOA     KL.SRI.COM. DLE.STRIPE.SRI.COM. (
+                                870407  ;serial
+                                1800    ;refresh every 30 minutes
+                                600     ;retry every 10 minutes
+                                604800  ;expire after a week
+                                86400   ;default of an hour
+                                )
+
+SRI.COM.        NS      KL.SRI.COM.
+                NS      STRIPE.SRI.COM.
+                MX      10      KL.SRI.COM.
+
+;SRI.COM hosts
+
+KL              A       10.1.0.2
+                A       128.18.10.6
+                MX      10      KL.SRI.COM.
+
+STRIPE          A       10.4.0.2
+STRIPE          A       128.18.10.4
+                MX      10      STRIPE.SRI.COM.
+
+NIC             CNAME   SRI-NIC.ARPA.
+
+Blackjack       A       128.18.2.1
+                HINFO   VAX-11/780      UNIX
+                WKS     128.18.2.1      TCP TELNET FTP
+
+CSL             A       192.12.33.2
+                HINFO   FOONLY-F4       TOPS20
+                WKS     192.12.33.2     TCP TELNET FTP SMTP FINGER
+                MX      10      CSL.SRI.COM

@@ -1,0 +1,34 @@
+[File "ISTC.ZONE"]
+
+ISTC.SRI.COM.   IN  SOA     KL.SRI.COM. roemers.JOYCE.ISTC.SRI.COM. (
+                            870406      ;serial
+                            1800        ;refresh every 30 minutes
+                            600         ;retry every 10 minutes
+                            604800      ;expire after a week
+                            86400       ;default of a day
+                            )
+
+ISTC.SRI.COM.   NS              KL.SRI.COM.
+                NS              STRIPE.SRI.COM.
+                MX              10      SPAM.ISTC.SRI.COM.
+
+; ISTC hosts
+
+joyce           A       128.18.4.2
+                HINFO   VAX-11/750 UNIX
+bozo            A       128.18.0.6
+                HINFO   SUN UNIX
+sundae          A       128.18.0.11
+                HINFO   SUN UNIX
+tsca            A       128.18.0.201
+                A       10.3.0.2
+                HINFO   VAX-11/750 UNIX
+                MX      10  TSCA.ISTC.SRI.COM.
+tsc             CNAME   tsca
+prmh            A       128.18.0.203
+                A       10.2.0.51
+                HINFO   PDP-11/44 UNIX
+spam            A       128.18.4.3
+                A       10.2.0.107
+                HINFO   VAX-11/780 UNIX
+                MX      10  SPAM.ISTC.SRI.COM.
