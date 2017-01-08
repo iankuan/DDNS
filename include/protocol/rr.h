@@ -1,6 +1,6 @@
-#include "../config_limit.h"
-#include "../type.h"
-//#include "rr_dtl.h"
+#include "config_limit.h"
+#include "type.h"
+#include "rr_dtl.h"
 
 ///Reference: https://www.ietf.org/rfc/rfc1035.txt
 
@@ -89,3 +89,10 @@ typedef struct _RR {
     u16_t   rd_len;
     u32_t   rdata[0];
 } RR_t;
+
+/**
+ * Function
+ */
+
+ #define get_rr(rr, member) \
+    (typeof(member)) (rr + offsetof(typeof(rr), type))
