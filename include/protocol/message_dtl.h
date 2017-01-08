@@ -115,21 +115,20 @@
  *                 resource records in the additional records section.
  * 
  */
-
 typedef struct _dns_header {
-    u16_t       ID;
-    int         QR: 1;
-    int     Opcode: 4;
-    int         AA: 1;
-    int         TC: 1;
-    int         RD: 1;
-    int         RA: 1;
-    int          Z: 3;
-    int      RCODE: 4;
-    u16_t   QDCOUNT;
-    u16_t   ANCOUNT;
-    u16_t   NSCOUNT;
-    u16_t   ARCOUNT;
+    u16_t       id;
+    int         qr: 1;
+    int     opcode: 4;
+    int         aa: 1;
+    int         tc: 1;
+    int         rd: 1;
+    int         ra: 1;
+    int          z: 3;
+    int      rcode: 4;
+    u16_t   qdcount;
+    u16_t   ancount;
+    u16_t   nscount;
+    u16_t   arcount;
 } DNS_HEADER_t;
 
 /**

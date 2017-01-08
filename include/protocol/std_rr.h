@@ -186,49 +186,6 @@ typedef struct _HINFO {
  * MB records cause additional section processing which looks up an A type
  * RRs corresponding to MADNAME.
  *
- * 3.3.4. DATA format (Obsolete)
- * 
- *     +--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+
- *     /                   MADNAME                     /
- *     /                                               /
- *     +--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+
- * 
- * where:
- * 
- * MADNAME         A <domain-name> which specifies a host which has a mail
- *                 agent for the domain which should be able to deliver
- *                 mail for the domain.
- * 
- * MD records cause additional section processing which looks up an A type
- * record corresponding to MADNAME.
- * 
- * MD is obsolete.  See the definition of MX and [RFC-974] for details of
- * the new scheme.  The recommended policy for dealing with MD RRs found in
- * a master file is to reject them, or to convert them to MX RRs with a
- * preference of 0.
- * 
- * 3.3.5. MF RDATA format (Obsolete)
- * 
- *     +--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+
- *     /                   MADNAME                     /
- *     /                                               /
- *     +--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+
- * 
- * where:
- * 
- * MADNAME         A <domain-name> which specifies a host which has a mail
- *                 agent for the domain which will accept mail for
- *                 forwarding to the domain.
- * 
- * MF records cause additional section processing which looks up an A type
- * record corresponding to MADNAME.
- * 
- * MF is obsolete.  See the definition of MX and [RFC-974] for details ofw
- * the new scheme.  The recommended policy for dealing with MD RRs found in
- * a master file is to reject them, or to convert them to MX RRs with a
- * preference of 10.
- * 
- * 
  */
 typedef char MADNAME_t[NAME_LIMIT];
 
@@ -282,8 +239,8 @@ typedef char MGMNAME_t[NAME_LIMIT];
  */
 ///FIXME: member rename
 typedef struct _MINFO {
-    char RMAILBX[NAME_LIMIT];
-    char EMAILBX[NAME_LIMIT];
+    char rmailbx[NAME_LIMIT];
+    char emailbx[NAME_LIMIT];
 } MINFO_t;
 
 /**
@@ -303,7 +260,7 @@ typedef struct _MINFO {
  * is as a forwarding entry for a user who has moved to a different
  * mailbox.
  */
-typedef char NEWNAME[NAME_LIMIT];
+typedef char NEWNAME_t[NAME_LIMIT];
  
 /** 
  * 3.3.9. MX RDATA format
@@ -411,10 +368,11 @@ typedef char TXT_t[NAME_LIMIT];
  * or decimal numbers.
  */
 typedef u8_t PROT_t;
+typedef u8_t BMAP_t;
 
 ///FIXME: variable len of bit_map
 typedef struct _WKS {
     A_t addr; 
     PROT_t prot;
-    BMAP_t bmap;
+    BMAP_t bmap[0];
 } WKS_t;
