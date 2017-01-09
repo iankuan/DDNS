@@ -5,8 +5,8 @@
  *          leads to different DATA format.
  *              Reference: https://www.ietf.org/rfc/rfc1035.txt
  */
-#include "../type.h"
-//#include "std_rr.h"
+#include "type.h"
+#include "protocol/std_rr.h"
 
 /**
  * 3.2.2. TYPE values
@@ -34,22 +34,22 @@
  *  TXT 16 text strings
  */
 /*typedef enum {
-    _A       = 1;
-    _NS      = 2;
-    _MD      = 3;
-    _MF      = 4;
-    _CNAME   = 5;
-    _SOA     = 6;
-    _MB      = 7;
-    _MG      = 8;
-    _MR      = 9;
-    _NULL    =10;
-    _WKS     =11;
-    _PTR     =12;
-    _HINFO   =13;
-    _MINFO   =14;
-    _MX      =15;
-    _TXT     =16;
+    _A       = 1,
+    _NS      = 2,
+    _MD      = 3,
+    _MF      = 4,
+    _CNAME   = 5,
+    _SOA     = 6,
+    _MB      = 7,
+    _MG      = 8,
+    _MR      = 9,
+    _NULL    =10,
+    _WKS     =11,
+    _PTR     =12,
+    _HINFO   =13,
+    _MINFO   =14,
+    _MX      =15,
+    _TXT     =16,
 } RR_TYPE_t;*/
 
 /**
@@ -65,30 +65,76 @@
  * *     255 A request for all records
  */
 typedef enum {
-    _A       =  1;
-    _NS      =  2;
-    _MD      =  3;
-    _MF      =  4;
-    _CNAME   =  5;
-    _SOA     =  6;
-    _MB      =  7;
-    _MG      =  8;
-    _MR      =  9;
-    _NULL    = 10;
-    _WKS     = 11;
-    _PTR     = 12;
-    _HINFO   = 13;
-    _MINFO   = 14;
-    _MX      = 15;
-    _TXT     = 16;
-    _AXFR    =253;
-    _MAILB   =253;
-    _MAILA   =254;
-    _*       =255;
+    _A       =  1,
+    _NS      =  2,
+    _MD      =  3,
+    _MF      =  4,
+    _CNAME   =  5,
+    _SOA     =  6,
+    _MB      =  7,
+    _MG      =  8,
+    _MR      =  9,
+    _NULL    = 10,
+    _WKS     = 11,
+    _PTR     = 12,
+    _HINFO   = 13,
+    _MINFO   = 14,
+    _MX      = 15,
+    _TXT     = 16,
+    _AXFR    =252,
+    _MAILB   =253,
+    _MAILA   =254,
+    _wildcard=255,
 } RR_QTYPE_t;
 
 ///FIXME: Not felixable
 typedef RR_QTYPE_t RR_TYPE_t;
+
+const char const *rr_qtype[256] = {
+    [0] = "\0",
+    [1] = "_A    ",
+    [2] = "_NS   ",
+    [3] = "_MD   ",
+    [4] = "_MF   ",
+    [5] = "_CNAME",
+    [6] = "_SOA  ",
+    [7] = "_MB   ",
+    [8] = "_MG   ",
+    [9] = "_MR   ",
+    [10] = "_NULL ",
+    [11] = "_WKS  ",
+    [12] = "_PTR  ",
+    [13] = "_HINFO",
+    [14] = "_MINFO",
+    [15] = "_MX   ",
+    [16] = "_TXT  ",
+    [17 ... 251] = "\0",
+    [252] = "_AXFR ",
+    [253] = "_MAILB",
+    [254] = "_MAILA",
+    [255] = "_*    ",
+};
+
+const char const *rr_type[256] = {
+    [0] = "\0",
+    [1] = "_A    ",
+    [2] = "_NS   ",
+    [3] = "_MD   ",
+    [4] = "_MF   ",
+    [5] = "_CNAME",
+    [6] = "_SOA  ",
+    [7] = "_MB   ",
+    [8] = "_MG   ",
+    [9] = "_MR   ",
+    [10] = "_NULL ",
+    [11] = "_WKS  ",
+    [12] = "_PTR  ",
+    [13] = "_HINFO",
+    [14] = "_MINFO",
+    [15] = "_MX   ",
+    [16] = "_TXT  ",
+    [17 ... 255] = "\0",
+};
 
 /**
  * 3.2.4. CLASS values
@@ -120,12 +166,23 @@ typedef RR_QTYPE_t RR_TYPE_t;
  * *  255 any class
  */
 typedef enum {
-    _IN = 1;
-    _CS = 2;
-    _CH = 3;
-    _HS = 4;
-    _* =255;
+    _IN = 1,
+    _CS = 2,
+    _CH = 3,
+    _HS = 4,
+///FIXME: redeclartion
+//    _* =255,
 } RR_QCLASS_t;
 
 ///FIXME: Not felixable
- typedef RR_QCLASS_t RR_CLASS_t;
+typedef RR_QCLASS_t RR_CLASS_t;
+
+const char const *rr_qclass[256] = {
+    [0] = "\0",
+    [1] = "_IN",
+    [2] = "_CS",
+    [3] = "_CH",
+    [4] = "_HS",
+    [5 ... 254] = "\0",
+    [255] = "_*",
+};
