@@ -45,3 +45,14 @@
  * which relate to the query, but are not strictly answers for the
  * question.
  */
+
+typedef RR_ptr_t DNS_ANSWER_ptr_t;
+typedef RR_ptr_t DNS_AUTHORITY_ptr_t;
+typedef RR_ptr_t DNS_ADDITION_ptr_t;
+
+typedef _DNS_MESSAGE_PTR {
+   DNS_HEADER_t             *header;
+   DNS_QUESTION_ptr_t   **quest_ptr;
+   DNS_ANSWER_ptr_t       **ans_ptr;
+   DNS_ADDITION_ptr_t     **add_ptr;
+} DNS_MESSAGE_ptr_t;
