@@ -121,14 +121,14 @@ typedef enum {
     _STD_QUERY,
     _INV_QUERY,
     _STATUS_QUERY,
-} OPCODE_t
+} OPCODE_t;
 
-const char const *rcode[16] {
+const char const *opcode[16] = {
     "_STD_QUERY",
     "_INV_QUERY",
     "_STATUS_QUERY",
     [3 ... 15] = "\0",
-}
+};
 
 ///RCODE
 typedef enum {
@@ -139,14 +139,14 @@ typedef enum {
     _REFUSE,
 } RCODE_t;
 
-const char const *rcode[16] {
+const char const *rcode[16] = {
     "_NO_ERR",
     "_SERV_FAIL",
     "_NAME_ERR",
     "_NOT_IMPL",
     "_REFUSE",
     [6 ... 15] = "\0",
-}
+};
 
 typedef struct _dns_header {
     u16_t       id;
@@ -164,24 +164,27 @@ typedef struct _dns_header {
     u16_t   arcount;
 } DNS_HEADER_t;
 
-#define init_dns_header(name, _id, _qr, _opcode, _aa, _tc,\
-                            _rd, _ra, _rcode, _qdcount, ancount,\
+#define dns_header_assign(var, _id, _qr, _opcode, _aa, _tc,\
+                            _rd, _ra, _rcode, _qdcount, _ancount,\
                                 _nscount, _arcount)\
-    DNS_HEADER_t name = {\
-            .id = _id,\
-            .qr = _qr,\
-        .opcode = _opcode,\
-            .aa = _aa,\
-            .tc = _tc,\
-            .rd = _rd,\
-            .ra = _ra,\
-             .z =  0,\
-         .rcode = _rcode,\
-       .qdcount = _qdcount,\
-       .ancount = _ancount,\
-        .nscoun = _nscount,\
-        .arcoun = _arcount,\
-    };
+    __typeof__(var) _tmp = { \
+          .id = _id,\
+          .qr = _qr,\
+      .opcode = _opcode,\
+          .aa = _aa,\
+          .tc = _tc,\
+          .rd = _rd,\
+          .ra = _ra,\
+           .z =  0,\
+       .rcode = _rcode,\
+     .qdcount = _qdcount,\
+     .ancount = _ancount,\
+     .nscount = _nscount,\
+     .arcount = _arcount,\
+      };\
+    var = _tmp
+
+
 
 /**
  * 4.1.2. Question section format
@@ -218,13 +221,13 @@ typedef struct _dns_header {
  * 
  */
 typedef struct _DNS_QUESTION {
-    QTYPE_t     qtype;
-    QCLASS_t    qclass;
+    RR_QTYPE_t     qtype;
+    RR_QCLASS_t    qclass;
 } DNS_QUESTION_t;
 
 typedef struct _DNS_QUESTION_ptr {
     char             *qname;
-    DNS_QUESTION_t question;
+    DNS_QUESTION_t *question;
 } DNS_QUESTION_ptr_t;
 
 /**

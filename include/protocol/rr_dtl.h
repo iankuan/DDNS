@@ -6,7 +6,7 @@
  *              Reference: https://www.ietf.org/rfc/rfc1035.txt
  */
 #include "type.h"
-#include "protocol/std_rr.h"
+#include "std_rr.h"
 
 /**
  * 3.2.2. TYPE values
