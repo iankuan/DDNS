@@ -64,7 +64,7 @@
  * MAILA 254 A request for mail agent RRs (Obsolete - see MX)
  * *     255 A request for all records
  */
-typedef enum {
+enum {
     _A       =  1,
     _NS      =  2,
     _MD      =  3,
@@ -85,7 +85,9 @@ typedef enum {
     _MAILB   =253,
     _MAILA   =254,
     _wildcard=255,
-} RR_QTYPE_t;
+};
+
+typedef u16_t RR_QTYPE_t;
 
 ///FIXME: Not felixable
 typedef RR_QTYPE_t RR_TYPE_t;
@@ -165,14 +167,16 @@ const char const *rr_type[256] = {
  * 
  * *  255 any class
  */
-typedef enum {
+enum {
     _IN = 1,
     _CS = 2,
     _CH = 3,
     _HS = 4,
 ///FIXME: redeclartion
 //    _* =255,
-} RR_QCLASS_t;
+};
+
+typedef u16_t RR_QCLASS_t;
 
 ///FIXME: Not felixable
 typedef RR_QCLASS_t RR_CLASS_t;
