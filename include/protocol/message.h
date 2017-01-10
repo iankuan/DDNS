@@ -45,3 +45,26 @@
  * which relate to the query, but are not strictly answers for the
  * question.
  */
+
+ ///FIXME:maybe we should use varible-length arrary in  gcc extension for it.(but just bein function)
+ ///        or malloc() with different assignment to locate the data structure
+ 
+typedef RR_t DNS_ANSWER_t;
+typedef RR_t DNS_AUTHORITY_t;
+typedef RR_t DNS_ADDITION_t;
+
+typedef _DNS_MESSAGE {
+   DNS_HEADER_t     header;
+   DNS_QUESTION_t   question;
+   DNS_ANSWER_t     answer;
+}
+
+#define declare_dns_message(name, nQuest, nAns, nAuth, nAdd) \
+    struct _DNS_MESSAGE { \
+        DNS_HEADER_t     header; \
+        DNS_QUESTION_t   quest[nQuest]; \
+        DNS_ANSWER_t     ans[nAns]; \
+        DNS_AUTORITY_t   auth[nAuth]; \
+        DNS_ADDITION_t   addition[nAdd]; \
+    }name; \
+    typedef struct _DNS_MESSAGE DNS_MESSAGE_t;

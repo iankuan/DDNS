@@ -115,6 +115,39 @@
  *                 resource records in the additional records section.
  * 
  */
+
+///OPCODE
+typedef enum {
+    _STD_QUERY,
+    _INV_QUERY,
+    _STATUS_QUERY,
+} OPCODE_t
+
+const char const *rcode[16] {
+    "_STD_QUERY",
+    "_INV_QUERY",
+    "_STATUS_QUERY",
+    [3 ... 15] = "\0",
+}
+
+///RCODE
+typedef enum {
+    _NO_ERR,
+    _SERV_FAIL,
+    _NAME_ERR,
+    _NOT_IMPL,
+    _REFUSE,
+} RCODE_t;
+
+const char const *rcode[16] {
+    "_NO_ERR",
+    "_SERV_FAIL",
+    "_NAME_ERR",
+    "_NOT_IMPL",
+    "_REFUSE",
+    [6 ... 15] = "\0",
+}
+
 typedef struct _dns_header {
     u16_t       id;
     int         qr: 1;
@@ -130,6 +163,25 @@ typedef struct _dns_header {
     u16_t   nscount;
     u16_t   arcount;
 } DNS_HEADER_t;
+
+#define init_dns_header(name, _id, _qr, _opcode, _aa, _tc,\
+                            _rd, _ra, _rcode, _qdcount, ancount,\
+                                _nscount, _arcount)\
+    DNS_HEADER_t name = {\
+            .id = _id,\
+            .qr = _qr,\
+        .opcode = _opcode,\
+            .aa = _aa,\
+            .tc = _tc,\
+            .rd = _rd,\
+            .ra = _ra,\
+             .z =  0,\
+         .rcode = _rcode,\
+       .qdcount = _qdcount,\
+       .ancount = _ancount,\
+        .nscoun = _nscount,\
+        .arcoun = _arcount,\
+    };
 
 /**
  * 4.1.2. Question section format
@@ -165,7 +217,23 @@ typedef struct _dns_header {
  *                 can match more than one type of RR.
  * 
  */
+/*typedef struct _QUESTION {
+    char        *qname;
+    QTYPE_t     qtype;
+    QCLASS_t    qclass;
+} DNS_QUESTION_t;*/
 
+#define type_dns_question(qname)\
+    typedef struct _QUESTION {\
+        char        qname[strlen(_qname) + 1];\
+        QTYPE_t     qtype;\
+        QCLASS_t    qclass;\
+    } DNS_QUESTION_t;\
+
+#define init_dns_question(var, _qname, qtype, qclass)
+
+
+    
 
 /**
  * 4.1.3. Resource record format
@@ -221,6 +289,7 @@ typedef struct _dns_header {
  *                 For example, the if the TYPE is A and the CLASS is IN,
  *                 the RDATA field is a 4 octet ARPA Internet address.
  */
+
 
 /**
  * 4.1.4. Message compression
