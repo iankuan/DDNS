@@ -1,3 +1,6 @@
+#ifndef TYPE_H
+#define TYPE_H
+
 #include <stdint.h>
 
 #define u32_t uint32_t
@@ -7,3 +10,5 @@
 #define s32_t int32_t
 #define s16_t int16_t
 #define s8_t int8_t
+
+#endif ///TYPE_H

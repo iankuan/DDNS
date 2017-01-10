@@ -1,4 +1,4 @@
-#ifdef DEBUG_H
+#ifndef DEBUG_H
 #define DEBUG_H
 /**
  * @file This file is for Debug, we can use this file like logcat
