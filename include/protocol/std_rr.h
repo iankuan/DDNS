@@ -127,18 +127,18 @@ typedef char *PTRDNAME_t;
     u32_t minimu;
 } SOA_t;*/
 
-typedef struct _SOA_fix {
+typedef struct _SOA {
     u32_t sperial;
     u32_t refresh;
     u32_t retry;
     u32_t expire;
     u32_t minimu;
-} SOA_fix_t;
+} SOA_t;
 
 typedef struct _SOA_ptr {
     char        *mname;
     char        *rname;
-    SOA_FIX_t*     fix;
+    SOA_t*         soa;
 } SOA_ptr_t;
 
 /**

@@ -90,17 +90,17 @@ typedef s32_t TTL_t;///ttl
     u32_t   rdata[0];
 } RR_t;*/
 
-typedef struct _RR_fix {
+typedef struct _RR {
     RR_TYPE_t     type;
     RR_CLASS_t   class;
     TTL_t   ttl;
     u16_t   rd_len;
     u32_t   rdata[0];
-} RR_fix_t;
+} RR_t;
 
 typedef struct _RR_ptr {
     char    *name;
-    RR_fix_t  fix;
+    RR_t      *rr;
 } RR_ptr_t;
 
 /**
