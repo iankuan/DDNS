@@ -46,7 +46,7 @@ typedef u32_t A_t;
  * NSDNAME         A <domain-name> which specifies a host which should be
  *                 authoritative for the specified class and domain
  */
- typedef char NN_t[NAME_LIMIT];
+ typedef char *NN_t;
 
 /**
  * 3.3.12. Pointer (PTR) RR
@@ -62,7 +62,7 @@ typedef u32_t A_t;
  * PTRDNAME        A <domain-name> which points to some location in the
  *                 domain name space.
  */
-typedef char PTRDNAME_t[NAME_LIMIT];
+typedef char *PTRDNAME_t;
 
 /**
  * 3.3.13. Start of Authority (SOA) RR
@@ -117,15 +117,29 @@ typedef char PTRDNAME_t[NAME_LIMIT];
  * MINIMUM         The unsigned 32 bit minimum TTL field that should be
  *                 exported with any RR from this zone.
  */
-typedef struct _SOA {
-    char mname[NAME_LIMIT];
-    char rname[NAME_LIMIT];
+/*typedef struct _SOA {
+    char   *mname;
+    char   *rname;
     u32_t sperial;
     u32_t refresh;
     u32_t retry;
     u32_t expire;
     u32_t minimu;
-} SOA_t;
+} SOA_t;*/
+
+typedef struct _SOA_fix {
+    u32_t sperial;
+    u32_t refresh;
+    u32_t retry;
+    u32_t expire;
+    u32_t minimu;
+} SOA_fix_t;
+
+typedef struct _SOA_ptr {
+    char        *mname;
+    char        *rname;
+    SOA_FIX_t*     fix;
+} SOA_ptr_t;
 
 /**
  * 3.3.1. Canonical Name (CNAME) RR format
@@ -142,7 +156,7 @@ typedef struct _SOA {
  * CNAME           A <domain-name> which specifies the canonical or primary
  *                 name for the owner.  The owner name is an alias.
  */
-typedef char CNAME_t[NAME_LIMIT];
+typedef char *CNAME_t;
 
 /**
  * 3.3.2. HINFO RDATA format
@@ -166,10 +180,10 @@ typedef char CNAME_t[NAME_LIMIT];
  * main use is for protocols such as FTP that can use special procedures
  * when talking between machines or operating systems of the same type.
  */
-typedef struct _HINFO {
-    char cpu[NAME_LIMIT];
-    char os[NAME_LIMIT];
-} HINFO_t;
+typedef struct _HINFO_ptr {
+    char *cpu;
+    char  *os;
+} HINFO_ptr_t;
 
 /**
  * 3.3.3. MB RDATA format (EXPERIMENTAL)
@@ -187,7 +201,7 @@ typedef struct _HINFO {
  * RRs corresponding to MADNAME.
  *
  */
-typedef char MADNAME_t[NAME_LIMIT];
+typedef char *MADNAME_t;
 
 /**
  * 3.3.6. MG RDATA format (EXPERIMENTAL)
@@ -204,7 +218,7 @@ typedef char MADNAME_t[NAME_LIMIT];
  * 
  * MG records cause no additional section processing.
  */
-typedef char MGMNAME_t[NAME_LIMIT];
+typedef char *MGMNAME_t;
 
 /**
  * 3.3.7. MINFO RDATA format (EXPERIMENTAL)
@@ -238,10 +252,10 @@ typedef char MGMNAME_t[NAME_LIMIT];
  * with a mailing list.
  */
 ///FIXME: member rename
-typedef struct _MINFO {
-    char rmailbx[NAME_LIMIT];
-    char emailbx[NAME_LIMIT];
-} MINFO_t;
+typedef struct _MINFO_ptr {
+    char *rmailbx;
+    char *emailbx;
+} MINFO_ptr_t;
 
 /**
  * 3.3.8. MR RDATA format (EXPERIMENTAL)
@@ -260,7 +274,7 @@ typedef struct _MINFO {
  * is as a forwarding entry for a user who has moved to a different
  * mailbox.
  */
-typedef char NEWNAME_t[NAME_LIMIT];
+typedef char *NEWNAME_t;
  
 /** 
  * 3.3.9. MX RDATA format
@@ -285,9 +299,10 @@ typedef char NEWNAME_t[NAME_LIMIT];
  * specified by EXCHANGE.  The use of MX RRs is explained in detail in
  * [RFC-974].
  */
+///TODO: Consider that we should use the uniform format(not zero-length array)
 typedef struct MX {
     uint16_t preference;
-    char exchange[NAME_LIMIT];
+    char exchange[0];
 } MX_t;
 
 /** 
@@ -321,7 +336,7 @@ typedef struct MX {
  * TXT RRs are used to hold descriptive text.  The semantics of the text
  * depends on the domain where it is found.
  */
-typedef char TXT_t[NAME_LIMIT];
+typedef char *TXT_t;
 
 /**
  * 3.4.2 WKS RDATA format

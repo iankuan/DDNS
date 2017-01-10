@@ -81,14 +81,27 @@
 typedef s32_t TTL_t;///ttl
 
 ///rr_format
-typedef struct _RR {
+/*typedef struct _RR {
     char    name[NAME_LIMIT];
     RR_TYPE_t     type;
     RR_CLASS_t   class;
     TTL_t   ttl;
     u16_t   rd_len;
     u32_t   rdata[0];
-} RR_t;
+} RR_t;*/
+
+typedef struct _RR_fix {
+    RR_TYPE_t     type;
+    RR_CLASS_t   class;
+    TTL_t   ttl;
+    u16_t   rd_len;
+    u32_t   rdata[0];
+} RR_fix_t;
+
+typedef struct _RR_ptr {
+    char    *name;
+    RR_fix_t  fix;
+} RR_ptr_t;
 
 /**
  * Function
