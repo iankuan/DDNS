@@ -27,7 +27,7 @@ OBJ = $(patsubst %.c, %.o, $(SRC))
 
 #Debug FLAGS
 ifeq ($(strip $(DEBUG)), 1)
-	CFLAGS += -DDEBUG -g3
+CFLAGS += -DDEBUG -g3
 endif
 
 .PHONY: all clean
@@ -42,7 +42,7 @@ $(EXEC): $(OBJ)
 
 #$(notdir $PATH) can left the file name without dir
 %.out: %.c
-	$(CC) $(CFLAGS) -o $(notdir $@) $^
+	$(CC) $(CFLAGS) -DDEBUG -g3 -o $(notdir $@) $^
 
 test: $(TEST)
 

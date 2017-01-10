@@ -1,4 +1,4 @@
-#include "protocol/rr.h"
+#include "protocol/message.h"
 
 int main(int argc, char **argv)
 {
