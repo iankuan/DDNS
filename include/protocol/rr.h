@@ -108,7 +108,8 @@ typedef struct _RR_ptr {
  */
 #define rr_declare(var) _declare(RR_ptr_t, var)
 
-#define rr_locate(var, locate) _locate(var, locate)
+                                        ///same as DNS_QUESTION_t
+#define rr_locate(var, locate) _locate(var->name, locate)
 
 #define rr_new(var) _new(RR_ptr_t, var)
 
