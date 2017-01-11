@@ -193,13 +193,22 @@ typedef struct _dns_header {
     \
     _s;})
 
+#define dns_header_locate_assign(var, locate, _id, _qr, _opcode, _aa, _tc,\
+                            _rd, _ra, _z, _rcode, _qdcount,\
+                            _ancount, _nscount, _arcount)\
+    ({\
+    dns_header_locate(var, locate);\
+    size_t _s = dns_header_assign(var, _id, _qr, _opcode, _aa, _tc,\
+                            _rd, _ra, _z, _rcode, _qdcount,\
+                            _ancount, _nscount, _arcount);\
+    _s;})
+
 #define dns_header_init(var, locate, _id, _qr, _opcode, _aa, _tc,\
                             _rd, _ra, _z, _rcode, _qdcount,\
                             _ancount, _nscount, _arcount)\
     ({\
     dns_header_declare(var);\
-    dns_header_locate(var, locate);\
-    size_t _s = dns_header_assign(var, _id, _qr, _opcode, _aa, _tc,\
+    size_t _s = dns_header_locate_assign(var, locate, _id, _qr, _opcode, _aa, _tc,\
                             _rd, _ra, _z, _rcode, _qdcount,\
                             _ancount, _nscount, _arcount);\
     _s;})
@@ -253,7 +262,8 @@ typedef struct _DNS_QUESTION_ptr {
 
 #define dns_question_declare(var) _declare(DNS_QUESTION_ptr_t *, var)
 
-#define dns_question_locate(var, locate) _locate(var, locate)
+///TODO: Important it is not same as header file, because we should take a independent space to store the pointer to buf not directly store to buf.
+#define dns_question_locate(var, locate) _locate(var->qname, locate)
 
 #define dns_question_new(var) _new(DNS_QUESTION_ptr_t *, var)
 
@@ -268,14 +278,18 @@ typedef struct _DNS_QUESTION_ptr {
     \
     _s += sizeof(DNS_QUESTION_t);\
     _s;})
-    
+
+#define dns_question_locate_assign(var, locate, _qname, _qtype, _qclass)\
+    ({\
+    dns_question_locate(var, locate);\
+    size_t _s = dns_question_assign(var, _qname, _qtype, _qclass);\
+    _s;})
+   
 #define dns_question_init(var, locate, _qname, _qtype, _qclass)\
     ({\
     dns_question_declare(var);\
     dns_question_locate(var, locate);\
-    size_t _s = dns_question_assign(var, _id, _qr, _opcode, _aa, _tc,\
-                            _rd, _ra, _z, _rcode, _qdcount,\
-                            _ancount, _nscount, _arcount);\
+    size_t _s = dns_question_locate_assign(var, locate, _qname, _qtype, _qclass);\
     _s;})
 
 #define dns_question_member(_struct, member)\
@@ -343,13 +357,47 @@ typedef struct _DNS_QUESTION_ptr {
  *                 the RDATA field is a 4 octet ARPA Internet address.
  */
 ///FIXME: We should take care! We reserve them for convenience.
-#define DNS_ANSWER     RR
-#define DNS_AUTHORITY  RR 
-#define DNS_ADDITIONAL RR
+#define DNS_ANSWER_ptr_t     RR_ptr_t
 
-#define dns_answer     rr
-#define dns_authority  rr 
-#define dns_additional rr
+#define dns_answer_declare(var) rr_declare(var)
+#define dns_answer_locate(var, locate) rr_locate(var, locate)
+#define dns_answer_new(var) rr_new(var)
+#define dns_answer_assign(var, _name, _type, _class, _ttl, _rd_len, _rdata)\
+    rr_assign(var, _name, _type, _class, _ttl, _rd_len, _rdata)
+#define dns_answer_locate_assign(var, locate, _qname, _qtype, _qclass)\
+    rr_locate_assign(var, locate, _qname, _qtype, _qclass)
+#define dns_answer_init(var, locate, _qname, _qtype, _qclass)\
+    rr_init(var, locate, _qname, _qtype, _qclass)
+#define dns_answer_member(_struct, member)\
+    rr_member(_struct, member)
+
+#define DNS_AUTHORITY_ptr_t  RR_ptr_t
+
+#define dns_authority_declare(var) rr_declare(var)
+#define dns_authority_locate(var, locate) rr_locate(var, locate)
+#define dns_authority_new(var) rr_new(var)
+#define dns_authority_assign(var, _name, _type, _class, _ttl, _rd_len, _rdata)\
+    rr_assign(var, _name, _type, _class, _ttl, _rd_len, _rdata)
+#define dns_authority_locate_assign(var, locate, _qname, _qtype, _qclass)\
+    rr_locate_assign(var, locate, _qname, _qtype, _qclass)
+#define dns_authority_init(var, locate, _qname, _qtype, _qclass)\
+    rr_init(var, locate, _qname, _qtype, _qclass)
+#define dns_authority_member(_struct, member)\
+    rr_member(_struct, member)
+
+#define DNS_ADDITIONAL_ptr_t RR_ptr_t  
+
+#define dns_additional_declare(var) rr_declare(var)
+#define dns_additional_locate(var, locate) rr_locate(var, locate)
+#define dns_additional_new(var) rr_new(var)
+#define dns_additional_assign(var, _name, _type, _class, _ttl, _rd_len, _rdata)\
+    rr_assign(var, _name, _type, _class, _ttl, _rd_len, _rdata)
+#define dns_additional_locate_assign(var, locate, _qname, _qtype, _qclass)\
+    rr_locate_assign(var, locate, _qname, _qtype, _qclass)
+#define dns_additional_init(var, locate, _qname, _qtype, _qclass)\
+    rr_init(var, locate, _qname, _qtype, _qclass)
+#define dns_additional_member(_struct, member)\
+    rr_member(_struct, member)
 
 /**
  * 4.1.4. Message compression

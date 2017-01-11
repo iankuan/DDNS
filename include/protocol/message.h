@@ -58,7 +58,7 @@ typedef struct _DNS_MESSAGE_PTR {
    DNS_HEADER_t             *header;
    DNS_QUESTION_ptr_t    *quest_ptr;
    DNS_ANSWER_ptr_t        *ans_ptr;
-   DNS_ADDITION_ptr_t      *add_ptr;
+   DNS_ADDITIONAL_ptr_t    *add_ptr;
 } DNS_MESSAGE_ptr_t;
 
 #endif///MESSAGE_H

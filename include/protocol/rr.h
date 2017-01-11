@@ -124,11 +124,18 @@ typedef struct _RR_ptr {
     protocol_struct_member_assign(var, rr, rdata, _rdata);\
     _s;})
 
+#define rr_locate_assign(var, locate, _qname, _qtype, _qclass)\
+    ({\
+    rr_locate(var, locate);\
+    size_t _s = rr_assign(var, _id, _qr, _opcode, _aa, _tc,\
+                            _rd, _ra, _z, _rcode, _qdcount,\
+                            _ancount, _nscount, _arcount);\
+    _s;})
+
 #define rr_init(var, locate, _qname, _qtype, _qclass)\
     ({\
     rr_declare(var);\
-    rr_locate(var, locate);\
-    size_t _s = rr_assign(var, _id, _qr, _opcode, _aa, _tc,\
+    size_t _s = rr_locate_assign(var, locate, _id, _qr, _opcode, _aa, _tc,\
                             _rd, _ra, _z, _rcode, _qdcount,\
                             _ancount, _nscount, _arcount);\
     _s;})

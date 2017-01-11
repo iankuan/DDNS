@@ -57,19 +57,11 @@
     _struct->member = __VA_ARGS__(val)
 
 #define _declare(type, var)\
-    ({\
-    type var;\
-    var;})
+    type var
 
 #define _locate(var, locate)\
     ({\
     var = (__typeof__(var)) locate;\
-    var;})
-
-#define _new(type, var)\
-    ({\
-    type _tmp;\
-    type var = type malloc(*_tmp);\
     var;})
 
 #define _new(type, var)\
