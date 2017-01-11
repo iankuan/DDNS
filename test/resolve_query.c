@@ -57,7 +57,7 @@ void dns_get_host_ip(char *host, RR_QTYPE_t qtype)
     char buf[BUF_SIZE];
     memset(buf, 0, BUF_SIZE);
 
-    unsigned int locate = 0;
+    size_t locate = 0;
     int sockfd;
     ssize_t nBytes;
     //struct sockaddr_in addr;
@@ -82,10 +82,23 @@ void dns_get_host_ip(char *host, RR_QTYPE_t qtype)
     
     ///DNS Header
     DNS_HEADER_t *hdr = (DNS_HEADER_t *) buf;
-    locate += sizeof(*hdr);
+    locate += dns_header_assign(        hdr,
+                           (u16_t) getpid(),
+                                          0,
+                                          0,
+                                 _STD_QUERY,
+                                          0,
+                                          1,
+                                          0,
+                                          0,
+                                    _NO_ERR,
+                                          1,
+                                          0,
+                                          0,
+                                          0);
 
     ///DNS Header Assign
-    dns_header_assign(     *hdr,
+    /*dns_header_assign(     *hdr,
         (u16_t) htons(getpid()),
                               0,
                               0,
@@ -97,20 +110,29 @@ void dns_get_host_ip(char *host, RR_QTYPE_t qtype)
                  htons(qdcount),
                               0,
                               0,
-                              0);
+                              0);*/
     ///DNS Question
-    DNS_QUESTION_ptr_t *q_list = (DNS_QUESTION_ptr_t *) malloc(qdcount * sizeof(DNS_QUESTION_ptr_t));
+    //DNS_QUESTION_ptr_t *q_list = (DNS_QUESTION_ptr_t *) malloc(qdcount * sizeof(DNS_QUESTION_ptr_t));
+    DNS_QUESTION_ptr_t **q_list = (DNS_QUESTION_ptr_t **) malloc(qdcount * sizeof(DNS_QUESTION_ptr_t *));
     
+    for(int i = 0; i < qdcount; i++)
+    {
+        q_list[i] = (DNS_QUESTION_ptr_t *) malloc(sizeof(DNS_QUESTION_ptr_t));
+    }
+
     ///DNS Question Assign
-    q_list[0].qname = (char *) &buf[locate];
-    ch_to_dns_name(host, q_list[0].qname);
-    locate += strlen(q_list[0].qname) + 1;
+    q_list[0]->qname = (char *) &buf[locate];
+
+    char *_tmp = (char *) malloc(30 *sizeof(char));
+    ch_to_dns_name(host, _tmp);
+    /*locate += strlen(q_list[0].qname) + 1;
 
     q_list[0].question = (DNS_QUESTION_t *) &buf[locate];
     q_list[0].question->qtype = htons(qtype);
     q_list[0].question->qclass = htons(_IN);
 
-    locate += sizeof(*(q_list[0].question));
+    locate += sizeof(*(q_list[0].question));*/
+    locate += dns_question_assign(q_list[0], _tmp, qtype, _IN);
 
 
     ///Sendto
@@ -127,5 +149,7 @@ void dns_get_host_ip(char *host, RR_QTYPE_t qtype)
     syserr((nBytes = recvfrom(sockfd, buf, BUF_SIZE, 0, (struct sockaddr *) &dest,
             &len)) < 0, "sendto\n");
     printf("DONE\n");
-}
 
+    RR_ptr_t ans[10];
+    char *reader = &buf[locate];
+}
