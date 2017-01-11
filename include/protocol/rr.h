@@ -106,6 +106,11 @@ typedef struct _RR_ptr {
 /**
  * Function
  */
+#define rr_declare(var) _declare(RR_ptr_t, var)
+
+#define rr_locate(var, locate) _locate(var, locate)
+
+#define rr_new(var) _new(RR_ptr_t, var)
 
 #define rr_assign(var, _name, _type, _class, _ttl, _rd_len, _rdata)\
     ({\
@@ -119,5 +124,20 @@ typedef struct _RR_ptr {
     protocol_struct_member_assign(var, rr, rdata, _rdata);\
     _s;})
 
-#define get_rr(rr, member) \
-    (typeof(member)) (rr + offsetof(typeof(rr), type))
+#define rr_init(var, locate, _qname, _qtype, _qclass)\
+    ({\
+    rr_declare(var);\
+    rr_locate(var, locate);\
+    size_t _s = rr_assign(var, _id, _qr, _opcode, _aa, _tc,\
+                            _rd, _ra, _z, _rcode, _qdcount,\
+                            _ancount, _nscount, _arcount);\
+    _s;})
+
+#define rr_member(_struct, member)\
+    ({\
+    if(strcmp(#member, "name"))\
+        _struct->member;\
+    else\
+        _struct->question->member;\
+    })
+

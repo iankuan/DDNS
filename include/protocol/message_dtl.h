@@ -193,7 +193,7 @@ typedef struct _dns_header {
     \
     _s;})
 
-#define dns_header_init(var, locate,_id, _qr, _opcode, _aa, _tc,\
+#define dns_header_init(var, locate, _id, _qr, _opcode, _aa, _tc,\
                             _rd, _ra, _z, _rcode, _qdcount,\
                             _ancount, _nscount, _arcount)\
     ({\
@@ -203,6 +203,9 @@ typedef struct _dns_header {
                             _rd, _ra, _z, _rcode, _qdcount,\
                             _ancount, _nscount, _arcount);\
     _s;})
+
+#define dns_header_member(_struct, member)\
+    _struct->member
 
 /**
  * 4.1.2. Question section format
@@ -275,6 +278,16 @@ typedef struct _DNS_QUESTION_ptr {
                             _ancount, _nscount, _arcount);\
     _s;})
 
+#define dns_question_member(_struct, member)\
+    ({\
+    if(strcmp(#member, "qname"))\
+        _struct->member;\
+    else\
+        _struct->question->member;\
+    })
+        
+        
+
 /**
  * 4.1.3. Resource record format
  * 
@@ -329,6 +342,14 @@ typedef struct _DNS_QUESTION_ptr {
  *                 For example, the if the TYPE is A and the CLASS is IN,
  *                 the RDATA field is a 4 octet ARPA Internet address.
  */
+///FIXME: We should take care! We reserve them for convenience.
+#define DNS_ANSWER     RR
+#define DNS_AUTHORITY  RR 
+#define DNS_ADDITIONAL RR
+
+#define dns_answer     rr
+#define dns_authority  rr 
+#define dns_additional rr
 
 /**
  * 4.1.4. Message compression

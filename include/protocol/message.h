@@ -49,9 +49,10 @@
  * question.
  */
 
-typedef RR_ptr_t *DNS_ANSWER_ptr_t;
+///FIXME: Use #define to do this.
+/*typedef RR_ptr_t *DNS_ANSWER_ptr_t;
 typedef RR_ptr_t *DNS_AUTHORITY_ptr_t;
-typedef RR_ptr_t *DNS_ADDITION_ptr_t;
+typedef RR_ptr_t *DNS_ADDITION_ptr_t;*/
 
 typedef struct _DNS_MESSAGE_PTR {
    DNS_HEADER_t             *header;
