@@ -81,8 +81,9 @@ void dns_get_host_ip(char *host, RR_QTYPE_t qtype)
     ///DNS_MESSAGE_ptr_t msg_p;
     
     ///DNS Header
-    DNS_HEADER_t *hdr = (DNS_HEADER_t *) buf;
-    locate += dns_header_assign(        hdr,
+    //DNS_HEADER_t *hdr = (DNS_HEADER_t *) buf;
+    locate += dns_header_init(          hdr,
+                                        buf,
                            (u16_t) getpid(),
                                           0,
                                           0,
@@ -121,7 +122,7 @@ void dns_get_host_ip(char *host, RR_QTYPE_t qtype)
     }
 
     ///DNS Question Assign
-    q_list[0]->qname = (char *) &buf[locate];
+    //dns_question_locate(q_list[0], &buf[locate]);
 
     char *_tmp = (char *) malloc(30 *sizeof(char));
     ch_to_dns_name(host, _tmp);
@@ -132,7 +133,7 @@ void dns_get_host_ip(char *host, RR_QTYPE_t qtype)
     q_list[0].question->qclass = htons(_IN);
 
     locate += sizeof(*(q_list[0].question));*/
-    locate += dns_question_assign(q_list[0], _tmp, qtype, _IN);
+    locate += dns_question_locate_assign(q_list[0], &buf[locate], _tmp, qtype, _IN);
 
 
     ///Sendto
