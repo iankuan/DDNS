@@ -165,6 +165,12 @@ typedef struct _dns_header {
     u16_t   arcount;
 } DNS_HEADER_t;
 
+#define dns_header_declare(var) _declare(DNS_HEADER_t *, var)
+
+#define dns_header_locate(var, locate) _locate(var, locate)
+
+#define dns_header_new(var) _new(DNS_HEADER_t *, var)
+
 #define dns_header_assign(var, _id, _qr, _opcode, _aa, _tc,\
                             _rd, _ra, _z, _rcode, _qdcount,\
                             _ancount, _nscount, _arcount)\
@@ -187,29 +193,16 @@ typedef struct _dns_header {
     \
     _s;})
 
-
-
-/*#define dns_header_assign(var, _id, _qr, _opcode, _aa, _tc,\
-                            _rd, _ra, _rcode, _qdcount, _ancount,\
-                                _nscount, _arcount)\
-    __typeof__(var) _tmp = { \
-          .id = _id,\
-          .qr = _qr,\
-      .opcode = _opcode,\
-          .aa = _aa,\
-          .tc = _tc,\
-          .rd = _rd,\
-          .ra = _ra,\
-           .z =  0,\
-       .rcode = _rcode,\
-     .qdcount = _qdcount,\
-     .ancount = _ancount,\
-     .nscount = _nscount,\
-     .arcount = _arcount,\
-      };\
-    var = _tmp
-*/
-
+#define dns_header_init(var, locate,_id, _qr, _opcode, _aa, _tc,\
+                            _rd, _ra, _z, _rcode, _qdcount,\
+                            _ancount, _nscount, _arcount)\
+    ({\
+    dns_header_declare(var);\
+    dns_header_locate(var, locate);\
+    size_t _s = dns_header_assign(var, _id, _qr, _opcode, _aa, _tc,\
+                            _rd, _ra, _z, _rcode, _qdcount,\
+                            _ancount, _nscount, _arcount);\
+    _s;})
 
 /**
  * 4.1.2. Question section format
@@ -255,6 +248,12 @@ typedef struct _DNS_QUESTION_ptr {
     DNS_QUESTION_t *question;
 } DNS_QUESTION_ptr_t;
 
+#define dns_question_declare(var) _declare(DNS_QUESTION_ptr_t *, var)
+
+#define dns_question_locate(var, locate) _locate(var, locate)
+
+#define dns_question_new(var) _new(DNS_QUESTION_ptr_t *, var)
+
 #define dns_question_assign(var, _qname, _qtype, _qclass)\
     ({\
     size_t _s = strlen(_qname) + 1;\
@@ -267,6 +266,14 @@ typedef struct _DNS_QUESTION_ptr {
     _s += sizeof(DNS_QUESTION_t);\
     _s;})
     
+#define dns_question_init(var, locate, _qname, _qtype, _qclass)\
+    ({\
+    dns_question_declare(var);\
+    dns_question_locate(var, locate);\
+    size_t _s = dns_question_assign(var, _id, _qr, _opcode, _aa, _tc,\
+                            _rd, _ra, _z, _rcode, _qdcount,\
+                            _ancount, _nscount, _arcount);\
+    _s;})
 
 /**
  * 4.1.3. Resource record format

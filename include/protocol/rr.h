@@ -94,7 +94,7 @@ typedef struct _RR {
     RR_TYPE_t     type;
     RR_CLASS_t   class;
     TTL_t   ttl;
-    u16_t   rd_len;
+    u16_t   rdlength;
     u32_t   rdata[0];
 } RR_t;
 
@@ -107,5 +107,17 @@ typedef struct _RR_ptr {
  * Function
  */
 
- #define get_rr(rr, member) \
+#define rr_assign(var, _name, _type, _class, _ttl, _rd_len, _rdata)\
+    ({\
+    strcpy(var->name, _name); \
+    protocol_struct_member_assign(var, rr,  type,  _type, htons);\
+    protocol_struct_member_assign(var, rr, class, _class, htons);\
+    protocol_struct_member_assign(var, rr,   ttl,   _ttl, htonl);\
+    protocol_struct_member_assign(var, rr, rdlen, _rdlen, htons);\
+    \
+    size_t _s = (strlen(name) + 1) + sizeof(RR_t) + (size_t) rd_len;\
+    protocol_struct_member_assign(var, rr, rdata, _rdata);\
+    _s;})
+
+#define get_rr(rr, member) \
     (typeof(member)) (rr + offsetof(typeof(rr), type))

@@ -16,6 +16,14 @@
                     __typeof__(a) _a = a; \
                     __typeof__(b) _b = b; \
                     _a > _b ? _a : _b;})
+                    
+#define ARRAY_SIZE(arr) \
+	(sizeof(arr) / sizeof(*(arr)))
+
+#define ARRAY_INDEX(elt, arr)				\
+	({ unsigned int _elt = (unsigned int)(elt);	\
+	   unsigned int _arr = (unsigned int)(arr);	\
+	   (_elt - _arr) / sizeof(*(elt)); })
 
 /**
  * offset series
@@ -47,5 +55,27 @@
 
 #define protocol_struct_member_assign(_struct, member, val, ...)\
     _struct->member = __VA_ARGS__(val)
+
+#define _declare(type, var)\
+    ({\
+    type var;\
+    var;})
+
+#define _locate(var, locate)\
+    ({\
+    var = (__typeof__(var)) locate;\
+    var;})
+
+#define _new(type, var)\
+    ({\
+    type _tmp;\
+    type var = type malloc(*_tmp);\
+    var;})
+
+#define _new(type, var)\
+    ({\
+    type _tmp;\
+    type var = type malloc(*_tmp);\
+    var;})
 
 #endif ///MACRO_H
