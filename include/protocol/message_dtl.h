@@ -1,4 +1,5 @@
 #include "rr.h"
+#include "macro.h"
 
 /**
  * 4.1.1. Header section format
@@ -150,14 +151,14 @@ const char const *rcode[16] = {
 
 typedef struct _dns_header {
     u16_t       id;
-    int         qr: 1;
-    int     opcode: 4;
-    int         aa: 1;
-    int         tc: 1;
-    int         rd: 1;
-    int         ra: 1;
-    int          z: 3;
-    int      rcode: 4;
+    u32_t       qr: 1;
+    u32_t   opcode: 4;
+    u32_t       aa: 1;
+    u32_t       tc: 1;
+    u32_t       rd: 1;
+    u32_t       ra: 1;
+    u32_t        z: 3;
+    u32_t    rcode: 4;
     u16_t   qdcount;
     u16_t   ancount;
     u16_t   nscount;
@@ -165,6 +166,30 @@ typedef struct _dns_header {
 } DNS_HEADER_t;
 
 #define dns_header_assign(var, _id, _qr, _opcode, _aa, _tc,\
+                            _rd, _ra, _z, _rcode, _qdcount,\
+                            _ancount, _nscount, _arcount)\
+    ({\
+    size_t _s = sizeof(DNS_HEADER_t);\
+    \
+    protocol_struct_member_assign(var,     id,     _id, htons);\
+    protocol_struct_member_assign(var,     qr,     _qr, htonl);\
+    protocol_struct_member_assign(var, opcode, _opcode, htonl);\
+    protocol_struct_member_assign(var,     aa,     _aa, htonl);\
+    protocol_struct_member_assign(var,     tc,     _tc, htonl);\
+    protocol_struct_member_assign(var,     rd,     _rd, htonl);\
+    protocol_struct_member_assign(var,     ra,     _ra, htonl);\
+    protocol_struct_member_assign(var,      z,      _z, htonl);\
+    protocol_struct_member_assign(var,  rcode,  _rcode, htonl);\
+    protocol_struct_member_assign(var, qdcount, _qdcount, htons);\
+    protocol_struct_member_assign(var, ancount, _ancount, htons);\
+    protocol_struct_member_assign(var, nscount, _nscount, htons);\
+    protocol_struct_member_assign(var, arcount, _arcount, htons);\
+    \
+    _s;})
+
+
+
+/*#define dns_header_assign(var, _id, _qr, _opcode, _aa, _tc,\
                             _rd, _ra, _rcode, _qdcount, _ancount,\
                                 _nscount, _arcount)\
     __typeof__(var) _tmp = { \
@@ -183,7 +208,7 @@ typedef struct _dns_header {
      .arcount = _arcount,\
       };\
     var = _tmp
-
+*/
 
 
 /**
@@ -229,6 +254,19 @@ typedef struct _DNS_QUESTION_ptr {
     char             *qname;
     DNS_QUESTION_t *question;
 } DNS_QUESTION_ptr_t;
+
+#define dns_question_assign(var, _qname, _qtype, _qclass)\
+    ({\
+    size_t _s = strlen(_qname) + 1;\
+    var->question = (DNS_QUESTION_t *)(var->qname + _s);\
+    \
+    strcpy(var->qname, _qname);\
+    protocol_struct_member_assign(var->question,  qtype,  _qtype, htons);\
+    protocol_struct_member_assign(var->question, qclass, _qclass, htons);\
+    \
+    _s += sizeof(DNS_QUESTION_t);\
+    _s;})
+    
 
 /**
  * 4.1.3. Resource record format
