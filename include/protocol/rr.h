@@ -106,7 +106,7 @@ typedef struct _RR_ptr {
 /**
  * Function
  */
-#define rr_declare(var) _declare(RR_ptr_t, var)
+#define rr_declare(var) _declare(RR_ptr_t *, var)
 
                                         ///same as DNS_QUESTION_t
 #define rr_locate(var, locate) _locate(var->name, locate)
@@ -129,14 +129,6 @@ typedef struct _RR_ptr {
     ({\
     rr_locate(var, locate);\
     size_t _s = rr_assign(var, _id, _qr, _opcode, _aa, _tc,\
-                            _rd, _ra, _z, _rcode, _qdcount,\
-                            _ancount, _nscount, _arcount);\
-    _s;})
-
-#define rr_init(var, locate, _qname, _qtype, _qclass)\
-    ({\
-    rr_declare(var);\
-    size_t _s = rr_locate_assign(var, locate, _id, _qr, _opcode, _aa, _tc,\
                             _rd, _ra, _z, _rcode, _qdcount,\
                             _ancount, _nscount, _arcount);\
     _s;})

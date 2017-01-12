@@ -203,16 +203,6 @@ typedef struct _dns_header {
                             _ancount, _nscount, _arcount);\
     _s;})
 
-#define dns_header_init(var, locate, _id, _qr, _opcode, _aa, _tc,\
-                            _rd, _ra, _z, _rcode, _qdcount,\
-                            _ancount, _nscount, _arcount)\
-    ({\
-    dns_header_declare(var);\
-    size_t _s = dns_header_locate_assign(var, locate, _id, _qr, _opcode, _aa, _tc,\
-                            _rd, _ra, _z, _rcode, _qdcount,\
-                            _ancount, _nscount, _arcount);\
-    _s;})
-
 #define dns_header_member(_struct, member)\
     _struct->member
 
@@ -284,13 +274,6 @@ typedef struct _DNS_QUESTION_ptr {
     dns_question_locate(var, locate);\
     size_t _s = dns_question_assign(var, _qname, _qtype, _qclass);\
     _s;})
-   
-#define dns_question_init(var, locate, _qname, _qtype, _qclass)\
-    ({\
-    dns_question_declare(var);\
-    dns_question_locate(var, locate);\
-    size_t _s = dns_question_locate_assign(var, locate, _qname, _qtype, _qclass);\
-    _s;})
 
 #define dns_question_member(_struct, member)\
     ({\
@@ -357,6 +340,8 @@ typedef struct _DNS_QUESTION_ptr {
  *                 the RDATA field is a 4 octet ARPA Internet address.
  */
 ///FIXME: We should take care! We reserve them for convenience.
+
+///DNS_ANSWER_ptr_t
 #define DNS_ANSWER_ptr_t     RR_ptr_t
 
 #define dns_answer_declare(var) rr_declare(var)
@@ -371,6 +356,7 @@ typedef struct _DNS_QUESTION_ptr {
 #define dns_answer_member(_struct, member)\
     rr_member(_struct, member)
 
+///DNS_AUTHORITY_ptr_t
 #define DNS_AUTHORITY_ptr_t  RR_ptr_t
 
 #define dns_authority_declare(var) rr_declare(var)
@@ -380,11 +366,10 @@ typedef struct _DNS_QUESTION_ptr {
     rr_assign(var, _name, _type, _class, _ttl, _rd_len, _rdata)
 #define dns_authority_locate_assign(var, locate, _qname, _qtype, _qclass)\
     rr_locate_assign(var, locate, _qname, _qtype, _qclass)
-#define dns_authority_init(var, locate, _qname, _qtype, _qclass)\
-    rr_init(var, locate, _qname, _qtype, _qclass)
 #define dns_authority_member(_struct, member)\
     rr_member(_struct, member)
 
+///DNS_ADDITIONAL_ptr_t
 #define DNS_ADDITIONAL_ptr_t RR_ptr_t  
 
 #define dns_additional_declare(var) rr_declare(var)
@@ -394,8 +379,6 @@ typedef struct _DNS_QUESTION_ptr {
     rr_assign(var, _name, _type, _class, _ttl, _rd_len, _rdata)
 #define dns_additional_locate_assign(var, locate, _qname, _qtype, _qclass)\
     rr_locate_assign(var, locate, _qname, _qtype, _qclass)
-#define dns_additional_init(var, locate, _qname, _qtype, _qclass)\
-    rr_init(var, locate, _qname, _qtype, _qclass)
 #define dns_additional_member(_struct, member)\
     rr_member(_struct, member)
 
