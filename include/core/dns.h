@@ -25,30 +25,17 @@ struct DNS {
 
 void dns_header_show(DNS_HEADER_t *hdr)
 {
-    /**
-     *  FIXME: YOU CANNOT TAKE THE ADDRESS of BITFILEDS
-     *   *((u16_t *) (hdr + offsetof(DNS_HEADER_t, qr))) = ntohs(*((u16_t *) (hdr + offsetof(DNS_HEADER_t, qr))));
-     */
-    //*((u16_t *)((char *) hdr + offsetofend(DNS_HEADER_t, id))) = ntohs(*((u16_t *) ((char *) hdr + offsetofend(DNS_HEADER_t, id))));
     printf("**DNS_Header_t %p**\n", hdr);
-    /*printf("Header->id = %hu\n", dns_header_member(hdr, id, ntohs));
-    printf("Header->qr = %u\n", dns_header_member(hdr, qr, ntohl));
-    printf("Header->opcode = %u(%s)\n", dns_header_member(hdr, opcode, ntohl), _OPCODE[dns_header_member(hdr, opcode, ntohl)]);
-    printf("Header->aa = %u\n", dns_header_member(hdr, aa, ntohl) & 0x1);
-    printf("Header->tc = %u\n", dns_header_member(hdr, tc, ntohl) & 0x1);
-    printf("Header->rd = %u\n", dns_header_member(hdr, rd, ntohl);
-    printf("Header->ra = %u\n", dns_header_member(hdr, ra, ntohl) & 0x1);
-    printf("Header-> z = %u\n", dns_header_member(hdr,  z, ntohl));
-    printf("Header->rcode = %u(%s)\n", dns_header_member(hdr, rcode, ntohl), _RCODE[dns_header_member(hdr,rcode, ntohl)]);*/
+    
     printf("Header->id = %hu\n", dns_header_member(hdr, id, ntohs));
-    printf("Header->qr = %u\n", dns_header_member(hdr, qr));
-    printf("Header->opcode = %u(%s)\n", dns_header_member(hdr, opcode), _OPCODE[dns_header_member(hdr, opcode)]);
-    printf("Header->aa = %u\n", dns_header_member(hdr, aa));
-    printf("Header->tc = %u\n", dns_header_member(hdr, tc));
-    printf("Header->rd = %u\n", dns_header_member(hdr, rd));
-    printf("Header->ra = %u\n", dns_header_member(hdr, ra));
-    printf("Header-> z = %u\n", dns_header_member(hdr,  z));
-    printf("Header->rcode = %u(%s)\n", dns_header_member(hdr, rcode), _RCODE[dns_header_member(hdr, rcode)]);
+    printf("Header->qr = %hu\n", dns_header_member(hdr, qr));
+    printf("Header->opcode = %hu(%s)\n", dns_header_member(hdr, opcode), _OPCODE[dns_header_member(hdr, opcode)]);
+    printf("Header->aa = %hu\n", dns_header_member(hdr, aa));
+    printf("Header->tc = %hu\n", dns_header_member(hdr, tc));
+    printf("Header->rd = %hu\n", dns_header_member(hdr, rd));
+    printf("Header->ra = %hu\n", dns_header_member(hdr, ra));
+    printf("Header-> z = %hu\n", dns_header_member(hdr,  z));
+    printf("Header->rcode = %hu(%s)\n", dns_header_member(hdr, rcode), _RCODE[dns_header_member(hdr, rcode)]);
 
     printf("Header->qdcount = %hu\n", dns_header_member(hdr, qdcount, ntohs));
     printf("Header->ancount = %hu\n", dns_header_member(hdr, ancount, ntohs));
@@ -61,8 +48,26 @@ void dns_header_show(DNS_HEADER_t *hdr)
  * This would convert "www.google.com" to "3www6google3com"
  */
 static inline
-void host_to_dns_name(char *host, char *dns)
+void host_to_dns_name(char *dns, char *host)
 {
+    for(int i = 0, count = 0; i < strlen(host) + 1; i++)
+    {
+        if(host[i] == '.' || host[i] == '\0')
+        {
+            *dns++ = i - count;
+            while(count < i)
+                *dns++ = host[count++];
+            count++;
+        }
+    }
+    *dns = '\0';
+}
+
+static inline
+void dns_to_host_name(char *host, char *dns, char *buf, size_t *locate)
+{
+    
+
     for(int i = 0, count = 0; i < strlen(host) + 1; i++)
     {
         if(host[i] == '.' || host[i] == '\0')

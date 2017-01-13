@@ -10,8 +10,6 @@
 #include "debug.h"
 #include "core/dns.h"
 
-#define BUF_SIZE 2000
-
 char dns_server[10][100];
 int dns_server_count = 0;
 

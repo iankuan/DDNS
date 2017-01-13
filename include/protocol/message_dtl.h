@@ -630,7 +630,7 @@ typedef struct _DNS_QUESTION_ptr {
  * labels.
  */
 static inline
-bool is_compressive(char *byte)
+bool is_compressive(uchar *byte)
 {
    return get_bit(7, byte) & get_bit(6, byte); 
 }

@@ -3,25 +3,6 @@
 
 #include <stdbool.h>
 
-#define BITS_PER_CHAR  8
-#define BITS_PER_LONG  (BITS_PER_CHAR * sizeof(long))
-
-static inline unsigned long flsl(unsigned long word)
-{
-	return word ? sizeof(long) * BITS_PER_CHAR - __builtin_clz(word) : 0;
-}
-
-///Find First Significant bit(Long)
-static inline unsigned long ffsl(unsigned long word)
-{
-	return __builtin_ffsl(word);
-}
-
-static inline unsigned long ffzl(unsigned long word)
-{
-	return __builtin_ffsl(~word);
-}
-
 #define clear_bit(bit, ptr)\
 	*(ptr) &= (typeof(*(ptr))) ~(1 << bit)
 
@@ -32,23 +13,5 @@ static inline unsigned long ffzl(unsigned long word)
     ({\
 	    *(ptr) & (typeof(*(ptr)))(1 << bit)? true: false;\
     })
-
-static inline void bitmap_set_bit(unsigned long *map, unsigned long bit)
-{
-	set_bit(bit % BITS_PER_LONG, &map[bit / BITS_PER_LONG]);
-}
-
-static inline void bitmap_clear_bit(unsigned long *map, unsigned long bit)
-{
-	clear_bit(bit % BITS_PER_LONG, &map[bit / BITS_PER_LONG]);
-}
-
-static inline unsigned long bitmap_get_bit(unsigned long *map, unsigned long bit)
-{
-	return (map[bit / BITS_PER_LONG] >> (bit % BITS_PER_LONG)) & 1;
-}
-
-unsigned long find_first_bit(const unsigned long *addr, unsigned long size);
-unsigned long find_first_zero_bit(const unsigned long *addr, unsigned long size);
 
 #endif /* BITOPS_H */

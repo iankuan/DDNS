@@ -4,7 +4,7 @@
 
 int main(int argc, char **argv)
 {
-    struct sockaddr_in ser_addr, cli_addr;
+    struct sockaddr_in ser_addr;//, cli_addr;
 
     int cli_fd;
     socklen_t len;

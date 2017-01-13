@@ -13,13 +13,13 @@ int main(int argc, char **argv)
 {
     if(argc != 2)   elog("%s\n",Usage);
     
-    int cfg_fd, srv_fd;
+    //int cfg_fd, srv_fd;
 
     syserr(!isdir(argv[1]), "Dir doesn't exist\n");
     
     char *dir = argv[1];
 
-    char f[2][FNAME_LIMIT] = { STARTUP_FILE, ROOT_SERVER_FILE};
+    //char f[2][FNAME_LIMIT] = { STARTUP_FILE, ROOT_SERVER_FILE};
     /**
      * FIXME: We should distinguish `char **p`, `char *p[255]``char p[2][255])`.
      *  `char **p`: allocate a space to store a pointer pointed to `char *`
@@ -47,12 +47,12 @@ int main(int argc, char **argv)
     //strcat(path[0],"/");
     //strcat(path[0],fname[0]);
 
-    dlog("%s\n", path[0]);
+    //dlog("%s\n", path[0]);
 
     syserr(!fexist(path[0]), "startup doesn't exist\n");
 //    show_startup_cfg()
     
-//    syserr(!fexist(path[1]), "root server doesn't exist\n");
+    syserr(!fexist(path[1]), "root server doesn't exist\n");
 //    show_root_srv();
 
 
