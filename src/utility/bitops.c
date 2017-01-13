@@ -1,5 +1,5 @@
 #include "macro.h"
-#include "bitops.h"
+#include "utility/bitops.h"
 
 unsigned long find_first_bit(const unsigned long *addr, unsigned long size)
 {

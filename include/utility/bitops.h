@@ -9,6 +9,7 @@ static inline unsigned long flsl(unsigned long word)
 	return word ? sizeof(long) * BITS_PER_CHAR - __builtin_clz(word) : 0;
 }
 
+///Find First Significant bit(Long)
 static inline unsigned long ffsl(unsigned long word)
 {
 	return __builtin_ffsl(word);

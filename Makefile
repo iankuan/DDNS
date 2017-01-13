@@ -11,7 +11,7 @@ TEST_DIR = test
 TEST_SRC =
 LIB = 
 
-OBJ =
+OBJ = 
 EXEC =
 TEST = 
 
@@ -22,8 +22,8 @@ LFLAGS +=
 vpath %.c $(SRC_DIR)
 TEST_SRC = $(wildcard $(TEST_DIR)/*.c)
 TEST = $(patsubst %.c, %.out, $(TEST_SRC))
-OBJ = $(patsubst %.c, %.o, $(SRC))
-
+OBJ_SRC = $(wildcard $(SRC_DIR)/utility/*.c)
+OBJ = $(patsubst %.c, %.o, $(OBJ_SRC))
 
 #Debug FLAGS
 ifeq ($(strip $(DEBUG)), 1)
@@ -38,14 +38,14 @@ $(EXEC): $(OBJ)
 	$(CC) $(CFLAGS) -o $@ $^
 
 %.o: %.c
-	$(CC) $(CFLAGS) -c $^
+	$(CC) $(CFLAGS) -o $@ -c $^
 
 #$(notdir $PATH) can left the file name without dir
 %.out: %.c
 #	$(CC) $(CFLAGS) -DDEBUG -g3 -E $^
-	$(CC) $(CFLAGS) -DDEBUG -g3 -o $(notdir $@) $^
+	$(CC) $(CFLAGS) -DDEBUG -g3 -o $(notdir $@) $^ $(OBJ)
 
-test: $(TEST)
+test: $(OBJ) $(TEST)
 
 clean:
 	$(RM) -rf $(EXEC) $(OBJ) $(notdir $(TEST))
