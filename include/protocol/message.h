@@ -49,10 +49,46 @@
  * question.
  */
 
+/**
+ * 2 - Update Message Format
+ * 
+ *    The DNS Message Format is defined by [RFC1035 4.1].  Some extensions
+ *    are necessary (for example, more error codes are possible under
+ *    UPDATE than under QUERY) and some fields must be overloaded (see
+ *    description of CLASS fields below).
+ * 
+ *    The overall format of an UPDATE message is, following [ibid]:
+ * 
+ *       +---------------------+
+ *       |        Header       |
+ *       +---------------------+
+ *       |         Zone        | specifies the zone to be updated
+ *       +---------------------+
+ *       |     Prerequisite    | RRs or RRsets which must (not) preexist
+ *       +---------------------+
+ *       |        Update       | RRs or RRsets to be added or deleted
+ *       +---------------------+
+ *       |   Additional Data   | additional data
+ *       +---------------------+
+ * 
+ *    The Header Section specifies that this message is an UPDATE, and
+ *    describes the size of the other sections.  The Zone Section names the
+ *    zone that is to be updated by this message.  The Prerequisite Section
+ *    specifies the starting invariants (in terms of zone content) required
+ *    for this update.  The Update Section contains the edits to be made,
+ *    and the Additional Data Section contains data which may be necessary
+ *    to complete, but is not part of, this update.
+ */
+
+
 ///FIXME: Use #define to do this.
 /*typedef RR_ptr_t *DNS_ANSWER_ptr_t;
 typedef RR_ptr_t *DNS_AUTHORITY_ptr_t;
 typedef RR_ptr_t *DNS_ADDITION_ptr_t;*/
+
+#define DNS_ZONE_ptr_t          DNS_QUESTION_ptr_t
+#define DNS_PREREQUISITE_ptr_t  DNS_ANSWER_ptr_t
+#define DNS_UPDATE_ptr_t        DNS_ANSWER_ptr_t
 
 typedef struct _DNS_MESSAGE_PTR {
    DNS_HEADER_t             *header;

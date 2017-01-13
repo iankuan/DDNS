@@ -117,36 +117,148 @@
  * 
  */
 
+/**
+ *  DDNS-extension
+ *
+ *    2.2 - Message Header
+ * 
+ *    The header of the DNS Message Format is defined by [RFC 1035 4.1].
+ *    Not all opcodes define the same set of flag bits, though as a
+ *    practical matter most of the bits defined for QUERY (in [ibid]) are
+ *    identically defined by the other opcodes.  UPDATE uses only one flag
+ *    bit (QR).
+ * 
+ *    The DNS Message Format specifies record counts for its four sections
+ *    (Question, Answer, Authority, and Additional).  UPDATE uses the same
+ *    fields, and the same section formats, but the naming and use of these
+ *    sections differs as shown in the following modified header, after
+ *    [RFC1035 4.1.1]:
+ * 
+ *                                       1  1  1  1  1  1
+ *         0  1  2  3  4  5  6  7  8  9  0  1  2  3  4  5
+ *       +--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+
+ *       |                      ID                       |
+ *       +--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+
+ *       |QR|   Opcode  |          Z         |   RCODE   |
+ *       +--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+
+ *       |                    ZOCOUNT                    |
+ *       +--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+
+ *       |                    PRCOUNT                    |
+ *       +--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+
+ *       |                    UPCOUNT                    |
+ *       +--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+
+ *       |                    ADCOUNT                    |
+ *       +--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+
+ * 
+ * 
+ *    These fields are used as follows:
+ * 
+ *    ID      A 16-bit identifier assigned by the entity that generates any
+ *            kind of request.  This identifier is copied in the
+ *            corresponding reply and can be used by the requestor to match
+ *            replies to outstanding requests, or by the server to detect
+ *            duplicated requests from some requestor.
+ * 
+ *    QR      A one bit field that specifies whether this message is a
+ *            request (0), or a response (1).
+ * 
+ *    Opcode  A four bit field that specifies the kind of request in this
+ *            message.  This value is set by the originator of a request
+ *            and copied into the response.  The Opcode value that
+ *            identifies an UPDATE message is five (5).
+ * 
+ *    Z       Reserved for future use.  Should be zero (0) in all requests
+ *            and responses.  A non-zero Z field should be ignored by
+ *            implementations of this specification.
+ * 
+ *    RCODE   Response code - this four bit field is undefined in requests
+ *            and set in responses.  The values and meanings of this field
+ *            within responses are as follows:
+ * 
+ *               Mneumonic   Value   Description
+ *               ------------------------------------------------------------
+ *               NOERROR     0       No error condition.
+ *               FORMERR     1       The name server was unable to interpret
+ *                                   the request due to a format error.
+ *               SERVFAIL    2       The name server encountered an internal
+ *                                   failure while processing this request,
+ *                                   for example an operating system error
+ *                                   or a forwarding timeout.
+ *               NXDOMAIN    3       Some name that ought to exist,
+ *                                   does not exist.
+ *               NOTIMP      4       The name server does not support
+ *                                   the specified Opcode.
+ *               REFUSED     5       The name server refuses to perform the
+ *                                   specified operation for policy or
+ *                                   security reasons.
+ *               YXDOMAIN    6       Some name that ought not to exist,
+ *                                   does exist.
+ *               YXRRSET     7       Some RRset that ought not to exist,
+ *                                   does exist.
+ *               NXRRSET     8       Some RRset that ought to exist,
+ *                                   does not exist.
+ * 
+ *               NOTAUTH     9       The server is not authoritative for
+ *                                   the zone named in the Zone Section.
+ *               NOTZONE     10      A name used in the Prerequisite or
+ *                                   Update Section is not within the
+ *                                   zone denoted by the Zone Section.
+ * 
+ *    ZOCOUNT The number of RRs in the Zone Section.
+ * 
+ *    PRCOUNT The number of RRs in the Prerequisite Section.
+ * 
+ *    UPCOUNT The number of RRs in the Update Section.
+ * 
+ *    ADCOUNT The number of RRs in the Additional Data Section.
+ * 
+ */
+
 ///OPCODE
 typedef enum {
     _STD_QUERY,
     _INV_QUERY,
     _STATUS_QUERY,
+    _UPDATE = 5,
 } OPCODE_t;
 
 const char const *opcode[16] = {
     "_STD_QUERY",
     "_INV_QUERY",
     "_STATUS_QUERY",
-    [3 ... 15] = "\0",
+    "\0",
+    "_UPDATE",
+    [6 ... 15] = "\0",
 };
 
 ///RCODE
 typedef enum {
-    _NO_ERR,
-    _SERV_FAIL,
-    _NAME_ERR,
-    _NOT_IMPL,
-    _REFUSE,
+    _NOERROR,
+    _FORMERR,
+    _SERVFAIL,
+    _NXDOMAIN,
+    _NOTIMP,
+    _REFUSED, 
+    _YXDOMAIN,
+    _YXRRSET,
+    _NXRRSET,
+    _NOTAUTH,
+    _NOTZONE,
 } RCODE_t;
 
 const char const *rcode[16] = {
-    "_NO_ERR",
-    "_SERV_FAIL",
-    "_NAME_ERR",
-    "_NOT_IMPL",
-    "_REFUSE",
-    [6 ... 15] = "\0",
+    "_NOERROR",
+    "_FORMERR",
+    "_SERVFAIL",
+    "_NXDOMAIN",
+    "_NOTIMP",
+    "_REFUSED",
+    "_YXDOMAIN",
+    "_YXRRSET",
+    "_NXRRSET",
+    "_NOTAUTH",
+    "_NOTZONE",
+    [11 ... 15] = "\0",
 };
 
 typedef struct _dns_header {
@@ -240,6 +352,35 @@ typedef struct _dns_header {
  *                 can match more than one type of RR.
  * 
  */
+
+/**
+ *  DDNS-extension
+ *
+ *   2.3 - Zone Section
+ *
+ *   The Zone Section has the same format as that specified in [RFC1035
+ *   4.1.2], with the fields redefined as follows:
+ *
+ *                                      1  1  1  1  1  1
+ *        0  1  2  3  4  5  6  7  8  9  0  1  2  3  4  5
+ *      +--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+
+ *      |                                               |
+ *      /                     ZNAME                     /
+ *      /                                               /
+ *      +--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+
+ *      |                     ZTYPE                     |
+ *      +--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+
+ *      |                     ZCLASS                    |
+ *      +--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+
+ *
+ *   UPDATE uses this section to denote the zone of the records being
+ *   updated.  All records to be updated must be in the same zone, and
+ *   therefore the Zone Section is allowed to contain exactly one record.
+ *   The ZNAME is the zone name, the ZTYPE must be SOA, and the ZCLASS is
+ *   the zone's class.
+ */
+
+
 typedef struct _DNS_QUESTION {
     RR_QTYPE_t     qtype;
     RR_QCLASS_t    qclass;

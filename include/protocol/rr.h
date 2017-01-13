@@ -1,4 +1,4 @@
-#include "config_limit.h"
+#include "limit.h"
 #include "type.h"
 #include "rr_dtl.h"
 
