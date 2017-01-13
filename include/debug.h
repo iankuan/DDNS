@@ -27,12 +27,14 @@
 #define elog( ...) \
     do { \
         fprintf( stderr, "ERROR: "); fprintf( stderr, __VA_ARGS__); \
+        exit(EXIT_FAILURE); \
     } while (0)
 #else
 #define dlog( ...)
 #define elog( ...) \
     do { \
         fprintf(stderr, "ERROR: "); fprintf( stderr, __VA_ARGS__); \
+        exit(EXIT_FAILURE); \
     } while (0)
 #endif
 

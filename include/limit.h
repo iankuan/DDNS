@@ -1,4 +1,5 @@
-/** 
+/**
+ * **DNS Protocol Limit**
  * 
  * labels          63 octets or less
  * 
@@ -13,3 +14,9 @@
 #define NAME_LIMIT  255
 #define TTL_LIMIT    32
 #define UDP_LIMIT   512
+
+/**
+ * **FILE** 
+ */
+#define FNAME_LIMIT 50
+#define PATH_LIMIT 200
