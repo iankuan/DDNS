@@ -8,6 +8,7 @@
 
 #include "protocol/message.h"
 #include "debug.h"
+#include "core/dns.h"
 
 #define BUF_SIZE 2000
 
@@ -82,21 +83,22 @@ void dns_get_host_ip(char *host, RR_QTYPE_t qtype)
     
     ///DNS Header
     //DNS_HEADER_t *hdr = (DNS_HEADER_t *) buf;
-    locate += dns_header_init(          hdr,
+    dns_header_declare(hdr);
+    locate += dns_header_locate_assign( hdr,
                                         buf,
-                           (u16_t) getpid(),
-                                          0,
-                                          0,
-                                 _STD_QUERY,
-                                          0,
-                                          1,
-                                          0,
-                                          0,
-                                    _NO_ERR,
-                                          1,
-                                          0,
-                                          0,
-                                          0);
+                           (u16_t) getpid(),/*     id*/
+                                          0,/*     qr*/
+                                          0,/* opcode*/
+                                 _STD_QUERY,/*     aa*/
+                                          0,/*     tc*/
+                                          1,/*     rd*/
+                                          0,/*     ra*/
+                                          0,/*      z*/
+                                   _NOERROR,/*  rcode*/
+                                          1,/*qdcount*/
+                                          0,/*ancount*/
+                                          0,/*nscount*/
+                                          0)/*arcount*/;
 
     ///DNS Header Assign
     /*dns_header_assign(     *hdr,
@@ -146,11 +148,33 @@ void dns_get_host_ip(char *host, RR_QTYPE_t qtype)
     ///Receive
     printf("Receiving Answer\n");
 
-    socklen_t len = sizeof(dest);
+    size_t len = sizeof(dest);
     syserr((nBytes = recvfrom(sockfd, buf, BUF_SIZE, 0, (struct sockaddr *) &dest,
-            &len)) < 0, "sendto\n");
+            (socklen_t *) &len)) < 0, "sendto\n");
     printf("DONE\n");
 
-    RR_ptr_t ans[10];
+    dns_header_show(hdr);
+
+    //dns_header_locate(hdr, buf);
+
+    /*printf("\n %u Question", ntohs(hdr->qdcount));
+    printf("\n %u Answer", ntohs(hdr->ancount));
+    printf("\n %u Authority", ntohs(hdr->nscount));
+    printf("\n %u Additional\n", ntohs(hdr->arcount));
+
+    dns_answer_declare(ans[20]);
     char *reader = &buf[locate];
+    u16_t offset = 0;
+
+    for(int i = 0; i < ntohs(hdr->ancount); i++)
+    {
+        if((*reader & 0xC0) == 0xC0) {//compression
+            offset = (((u16_t) *reader & 0x3F) << 8) + *(reader + 1);
+            printf("\n offset = %u\n", offset);
+            ans[i]->name = &buf[offset];
+        }
+        else
+            dns_answer_locate(ans[i], reader);
+        printf("name = %s\n", ans[i]->name);
+    }*/
 }

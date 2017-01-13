@@ -222,7 +222,7 @@ typedef enum {
     _UPDATE = 5,
 } OPCODE_t;
 
-const char const *opcode[16] = {
+const char const *_OPCODE[16] = {
     "_STD_QUERY",
     "_INV_QUERY",
     "_STATUS_QUERY",
@@ -246,7 +246,7 @@ typedef enum {
     _NOTZONE,
 } RCODE_t;
 
-const char const *rcode[16] = {
+const char const *_RCODE[16] = {
     "_NOERROR",
     "_FORMERR",
     "_SERVFAIL",
@@ -262,15 +262,29 @@ const char const *rcode[16] = {
 };
 
 typedef struct _dns_header {
+///FIXME: IMPORTANT BIT would be affected by BIG ENDIAN
     u16_t       id;
-    u32_t       qr: 1;
-    u32_t   opcode: 4;
-    u32_t       aa: 1;
-    u32_t       tc: 1;
-    u32_t       rd: 1;
-    u32_t       ra: 1;
-    u32_t        z: 3;
-    u32_t    rcode: 4;
+#if __BYTE_ORDER__ == __ORDER_BIG_ENDIAN__
+    u16_t       qr: 1;
+    u16_t   opcode: 4;
+    u16_t       aa: 1;
+    u16_t       tc: 1;
+    u16_t       rd: 1;
+
+    u16_t       ra: 1;
+    u16_t        z: 3;
+    u16_t    rcode: 4;
+#else
+    u16_t       rd: 1;
+    u16_t       tc: 1;
+    u16_t       aa: 1;
+    u16_t   opcode: 4;
+    u16_t       qr: 1;
+
+    u16_t    rcode: 4;
+    u16_t        z: 3;
+    u16_t       ra: 1;
+#endif
     u16_t   qdcount;
     u16_t   ancount;
     u16_t   nscount;
@@ -290,14 +304,14 @@ typedef struct _dns_header {
     size_t _s = sizeof(DNS_HEADER_t);\
     \
     protocol_struct_member_assign(var,     id,     _id, htons);\
-    protocol_struct_member_assign(var,     qr,     _qr, htonl);\
-    protocol_struct_member_assign(var, opcode, _opcode, htonl);\
-    protocol_struct_member_assign(var,     aa,     _aa, htonl);\
-    protocol_struct_member_assign(var,     tc,     _tc, htonl);\
-    protocol_struct_member_assign(var,     rd,     _rd, htonl);\
-    protocol_struct_member_assign(var,     ra,     _ra, htonl);\
-    protocol_struct_member_assign(var,      z,      _z, htonl);\
-    protocol_struct_member_assign(var,  rcode,  _rcode, htonl);\
+    protocol_struct_member_assign(var,     qr,     _qr);\
+    protocol_struct_member_assign(var, opcode, _opcode);\
+    protocol_struct_member_assign(var,     aa,     _aa);\
+    protocol_struct_member_assign(var,     tc,     _tc);\
+    protocol_struct_member_assign(var,     rd,     _rd);\
+    protocol_struct_member_assign(var,     ra,     _ra);\
+    protocol_struct_member_assign(var,      z,      _z);\
+    protocol_struct_member_assign(var,  rcode,  _rcode);\
     protocol_struct_member_assign(var, qdcount, _qdcount, htons);\
     protocol_struct_member_assign(var, ancount, _ancount, htons);\
     protocol_struct_member_assign(var, nscount, _nscount, htons);\
@@ -315,8 +329,8 @@ typedef struct _dns_header {
                             _ancount, _nscount, _arcount);\
     _s;})
 
-#define dns_header_member(_struct, member)\
-    _struct->member
+#define dns_header_member(_struct, member, ...)\
+    __VA_ARGS__(_struct->member)
 
 /**
  * 4.1.2. Question section format

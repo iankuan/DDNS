@@ -11,4 +11,6 @@
 #define s16_t int16_t
 #define s8_t int8_t
 
+#define uchar unsigned char
+
 #endif ///TYPE_H

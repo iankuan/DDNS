@@ -1,7 +1,7 @@
 CC ?= gcc
 RM ?= rm
 
-CFLAGS = -std=gnu99 -Wall
+CFLAGS = -O0 -std=gnu99 -Wall
 LFLAGS =
 
 INC_DIR = include

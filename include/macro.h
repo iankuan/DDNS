@@ -29,8 +29,8 @@
  * offset series
  */
 ///offsetof
-#define offsetof(type, member) gcc_offsetof(type, member)
-
+//#define offsetof(type, member) gcc_offsetof(type, member)
+#define offsetof(type, member)  ((size_t)&((type *)0)->member)
 #define gcc_offsetof(type, member) \
     __builtin_offsetof (type, member)
 
@@ -41,7 +41,7 @@
  * @MEMBER: The member within the structure to get the end offset of
  */
 #define offsetofend(type, member) \
-    (offsetof(type, member) + sizeof(((TYPE *) 0)->MEMBER))
+    (offsetof(type, member) + sizeof(((type *) 0)->member))
 
 ///Container: structure begin
 #define container_of(ptr, type, member) ({ \
