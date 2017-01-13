@@ -1,5 +1,7 @@
 #include "ud.h"
 
+#define Usage   "./ud_udp_server <ip>"
+
 int main(int argc, char **argv)
 {
     struct sockaddr_in ser_addr, cli_addr;
@@ -10,6 +12,8 @@ int main(int argc, char **argv)
     ssize_t nBytes;
 
     char cli_addr_str[INET_ADDRSTRLEN];
+
+    assert(argc == 2 && Usage);
 
     ser_fd = socket(AF_INET, SOCK_DGRAM, 0);
     syserr(ser_fd == -1, "socket\n");

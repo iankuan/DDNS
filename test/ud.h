@@ -5,6 +5,7 @@
 #include <unistd.h>
 #include <ctype.h>
 #include <string.h>
+#include <assert.h>
 
 #include "debug.h"
 
