@@ -1,6 +1,8 @@
 #ifndef BITOPS_H
 #define BITOPS_H
 
+#include <stdbool.h>
+
 #define BITS_PER_CHAR  8
 #define BITS_PER_LONG  (BITS_PER_CHAR * sizeof(long))
 
@@ -20,15 +22,16 @@ static inline unsigned long ffzl(unsigned long word)
 	return __builtin_ffsl(~word);
 }
 
-static inline void clear_bit(unsigned long bit, unsigned long *word)
-{
-	*word &= ~(1 << bit);
-}
+#define clear_bit(bit, ptr)\
+	*(ptr) &= (typeof(*(ptr))) ~(1 << bit)
 
-static inline void set_bit(unsigned long bit, unsigned long *word)
-{
-	*word |= (1 << bit);
-}
+#define set_bit(bit, ptr)\
+	*(ptr) |= (typeof(*(ptr))) (1 << bit)
+
+#define get_bit(bit, ptr)\
+    ({\
+	    *(ptr) & (typeof(*(ptr)))(1 << bit)? true: false;\
+    })
 
 static inline void bitmap_set_bit(unsigned long *map, unsigned long bit)
 {

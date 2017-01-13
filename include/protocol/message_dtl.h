@@ -1,6 +1,8 @@
 #include "rr.h"
 #include "macro.h"
 
+#include "utility/bitops.h"
+
 /**
  * 4.1.1. Header section format
  * 
@@ -627,3 +629,10 @@ typedef struct _DNS_QUESTION_ptr {
  * defined by a single octet of zeros at 92; the root domain name has no
  * labels.
  */
+static inline
+bool is_compressive(char *byte)
+{
+   return get_bit(7, byte) & get_bit(6, byte); 
+}
+
+#define compression_mask 0x3FFF
