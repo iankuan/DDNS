@@ -411,6 +411,7 @@ typedef struct _DNS_QUESTION_ptr {
 
 ///TODO: Important it is not same as header file, because we should take a independent space to store the pointer to buf not directly store to buf.
 #define dns_question_locate(var, locate) _locate(var->qname, locate)
+#define dns_question_locate1(var, locate) _locate(var->question, locate)
 
 #define dns_question_new(var) _new(DNS_QUESTION_ptr_t *, var)
 
@@ -432,15 +433,20 @@ typedef struct _DNS_QUESTION_ptr {
     size_t _s = dns_question_assign(var, _qname, _qtype, _qclass);\
     _s;})
 
+/**
+ * RR Member
+ */
 #define dns_question_member(_struct, member)\
-    ({\
-    if(strcmp(#member, "qname"))\
-        _struct->member;\
-    else\
-        _struct->question->member;\
-    })
-        
-        
+    dns_question_member_ ## member(_struct, member)
+
+#define dns_question_member_qname(_struct, member)\
+            _struct->member
+
+#define dns_question_member_qtype(_struct, member)\
+            _struct->question->member
+
+#define dns_question_member_qclass(_struct, member)\
+            _struct->question->member
 
 /**
  * 4.1.3. Resource record format

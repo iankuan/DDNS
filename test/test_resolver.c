@@ -91,6 +91,8 @@ void dns_get_host_ip(char *host, RR_QTYPE_t qtype)
 
     locate += dns_question_locate_assign(q_list[0], &buf[locate], _tmp, qtype, _IN);
 
+    dns_question_member(q_list[0], qtype) = qtype;
+    dns_question_member(q_list[0], qname) = "name";
 
     ///Sendto
     printf("Sending Packet\n");
@@ -115,6 +117,10 @@ void dns_get_host_ip(char *host, RR_QTYPE_t qtype)
         printf("\nCOMPRESSIVE\n");
     else
         printf("\nNOT COMPRESSIVE\n");
+
+    printf("\n%u\n", ((((u16_t) buf[locate]) << 8) + buf[locate + 1]) & compression_mask);
+    printf("\n%s\n", &buf[((((u16_t) buf[locate]) << 8) + buf[locate + 1]) & compression_mask]);
+
 
     /*
     dns_answer_declare(ans[20]);

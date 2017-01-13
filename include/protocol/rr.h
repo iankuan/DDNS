@@ -133,11 +133,34 @@ typedef struct _RR_ptr {
                             _ancount, _nscount, _arcount);\
     _s;})
 
+/**
+ * RR Member
+ */
 #define rr_member(_struct, member)\
-    ({\
-    if(strcmp(#member, "name"))\
-        _struct->member;\
-    else\
-        _struct->question->member;\
-    })
+    rr_member_ ## member(_struct, member)
 
+#define rr_member_name(_struct, member)\
+    _struct->member
+
+#define rr_member_type(_struct, member)\
+    _struct->question->member
+
+#define rr_member_class(_struct, member)\
+    _struct->question->member
+
+///FIXME: strcmp("qname", #member) also extend two condition!!!
+/*#define rr_member(_struct, member)\
+    ({\
+        if (strcmp("qname", #member))\
+            _struct->member;\
+        else\
+            _struct->question->member;\
+    })*/
+
+///FIXME: __builtin_types_compatible_p() also extend two condition!!!
+    /*({\
+        if(__builtin_types_compatible_p ( __typeof__(_struct->member), (char *)))\
+            _struct->question->member;\
+        else\
+        _struct->member;\
+    })*/
