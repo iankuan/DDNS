@@ -221,7 +221,8 @@ typedef enum {
     _STD_QUERY,
     _INV_QUERY,
     _STATUS_QUERY,
-    _UPDATE = 5,
+    _NOTTIFY = 4,/**RFC 1996*/
+    _UPDATE = 5,/**RFC 2136*/
 } OPCODE_t;
 
 const char const *_OPCODE[16] = {
@@ -229,6 +230,7 @@ const char const *_OPCODE[16] = {
     "_INV_QUERY",
     "_STATUS_QUERY",
     "\0",
+    "_NOTTIFY",
     "_UPDATE",
     [6 ... 15] = "\0",
 };
@@ -241,11 +243,11 @@ typedef enum {
     _NXDOMAIN,
     _NOTIMP,
     _REFUSED, 
-    _YXDOMAIN,
+    _YXDOMAIN,/**RFC 2136*/
     _YXRRSET,
     _NXRRSET,
     _NOTAUTH,
-    _NOTZONE,
+    _NOTZONE,/**RFC 2136*/
 } RCODE_t;
 
 const char const *_RCODE[16] = {

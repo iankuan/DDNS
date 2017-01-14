@@ -43,6 +43,26 @@ void dns_header_show(DNS_HEADER_t *hdr)
     printf("Header->nscount = %hu\n", dns_header_member(hdr, nscount, ntohs));
 }
 
+/*void rr_show(RR_ptr_t *rr)
+{
+    printf("**RR_ptr_t %p**\n", rr);
+    
+    printf("Header->id = %hu\n", dns_header_member(hdr, id, ntohs));
+    printf("Header->qr = %hu\n", dns_header_member(hdr, qr));
+    printf("Header->opcode = %hu(%s)\n", dns_header_member(hdr, opcode), _OPCODE[dns_header_member(hdr, opcode)]);
+    printf("Header->aa = %hu\n", dns_header_member(hdr, aa));
+    printf("Header->tc = %hu\n", dns_header_member(hdr, tc));
+    printf("Header->rd = %hu\n", dns_header_member(hdr, rd));
+    printf("Header->ra = %hu\n", dns_header_member(hdr, ra));
+    printf("Header-> z = %hu\n", dns_header_member(hdr,  z));
+    printf("Header->rcode = %hu(%s)\n", dns_header_member(hdr, rcode), _RCODE[dns_header_member(hdr, rcode)]);
+
+    printf("Header->qdcount = %hu\n", dns_header_member(hdr, qdcount, ntohs));
+    printf("Header->ancount = %hu\n", dns_header_member(hdr, ancount, ntohs));
+    printf("Header->nscount = %hu\n", dns_header_member(hdr, nscount, ntohs));
+    printf("Header->nscount = %hu\n", dns_header_member(hdr, nscount, ntohs));
+}*/
+
 /**
  * TODO: IMPORTANT, but why
  * This would convert "www.google.com" to "3www6google3com"
@@ -64,21 +84,31 @@ void host_to_dns_name(char *dns, char *host)
 }
 
 static inline
-void dns_to_host_name(char *host, char *dns, char *buf, size_t *locate)
+void dns_to_host_name(char *host, uchar *buf, size_t *locate)
 {
-    
-
-    for(int i = 0, count = 0; i < strlen(host) + 1; i++)
-    {
-        if(host[i] == '.' || host[i] == '\0')
-        {
-            *dns++ = i - count;
-            while(count < i)
-                *dns++ = host[count++];
-            count++;
-        }
+    u16_t offset = 0xFFFF;
+    if( is_compressive(&buf[*locate])) {
+        offset = ((((u16_t) buf[*locate]) << 8) + buf[*locate + 1]) & compression_mask;
+        *locate += 2;
     }
-    *dns = '\0';
+    else
+        *locate += strlen((char *) &buf[*locate]) - 1;
+
+    uchar *dn = offset != 0xFFFF ? &buf[offset]: &buf[*locate];
+
+    int i = 0;
+    //Convert 3www6google3com0 to www.google.com
+    ///FIXME: Is it possible for >10
+
+    for(uchar count = dn[0]; count != 0; count = dn[i])
+    {
+        while(count-- != 0) {
+            host[i] = dn[i + 1];
+            i++;
+        }
+        host[i++] = '.';
+    }
+    host[i - 1] = '\0';
 }
 
 void dns_query(char *dns, uchar *buf, size_t len)

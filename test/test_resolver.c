@@ -121,6 +121,11 @@ void dns_get_host_ip(char *host, RR_QTYPE_t qtype)
     printf("\n%u\n", ((((u16_t) buf[locate]) << 8) + buf[locate + 1]) & compression_mask);
     printf("\n%s\n", &buf[((((u16_t) buf[locate]) << 8) + buf[locate + 1]) & compression_mask]);
 
+    char *ht = (char *) malloc(50 * sizeof(char));
+
+    dns_to_host_name(ht, buf, &locate);
+
+    printf("\n%s\n", ht);
 
     /*
     dns_answer_declare(ans[20]);
