@@ -92,7 +92,7 @@ typedef u16_t RR_QTYPE_t;
 ///FIXME: Not felixable
 typedef RR_QTYPE_t RR_TYPE_t;
 
-const char const *rr_qtype[256] = {
+const char const *_RR_QTYPE[256] = {
     [0] = "\0",
     [1] = "_A    ",
     [2] = "_NS   ",
@@ -116,8 +116,9 @@ const char const *rr_qtype[256] = {
     [254] = "_MAILA",
     [255] = "_*    ",
 };
+#define _RR_TYPE _RR_QTYPE
 
-const char const *rr_type[256] = {
+/*const char const *RR_TYPE[256] = {
     [0] = "\0",
     [1] = "_A    ",
     [2] = "_NS   ",
@@ -136,7 +137,7 @@ const char const *rr_type[256] = {
     [15] = "_MX   ",
     [16] = "_TXT  ",
     [17 ... 255] = "\0",
-};
+};*/
 
 /**
  * 3.2.4. CLASS values
@@ -182,7 +183,7 @@ typedef u16_t RR_QCLASS_t;
 ///FIXME: Not felixable
 typedef RR_QCLASS_t RR_CLASS_t;
 
-const char const *rr_qclass[256] = {
+const char const *_RR_QCLASS[256] = {
     [0] = "\0",
     [1] = "_IN",
     [2] = "_CS",
@@ -193,3 +194,4 @@ const char const *rr_qclass[256] = {
     [254] = "_NONE",///DDNS
     [255] = "_*",
 };
+#define _RR_CLASS _RR_QCLASS

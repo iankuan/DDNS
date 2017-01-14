@@ -42,7 +42,7 @@ $(EXEC): $(OBJ)
 
 #$(notdir $PATH) can left the file name without dir
 %.out: %.c
-#	$(CC) $(CFLAGS) -DDEBUG -g3 -E $^
+	$(CC) $(CFLAGS) -DDEBUG -g3 -E $^ > tmp
 	$(CC) $(CFLAGS) -DDEBUG -g3 -o $(notdir $@) $^ $(OBJ)
 
 test: $(OBJ) $(TEST)

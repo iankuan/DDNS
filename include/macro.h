@@ -59,15 +59,17 @@
 #define _declare(type, var)\
     type var
 
+
 #define _locate(var, locate)\
     ({\
     var = (__typeof__(var)) locate;\
     var;})
 
 #define _new(type, var)\
-    ({\
+    type var = (type) malloc(sizeof(*((type) 0)));\
+    /*({\
     type _tmp;\
-    type var = type malloc(*_tmp);\
-    var;})
+    type var = (type) malloc(sizeof(*_tmp));\
+    var;})*/
 
 #endif ///MACRO_H

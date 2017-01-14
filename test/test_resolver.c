@@ -91,8 +91,8 @@ void dns_get_host_ip(char *host, RR_QTYPE_t qtype)
 
     locate += dns_question_locate_assign(q_list[0], &buf[locate], _tmp, qtype, _IN);
 
-    dns_question_member(q_list[0], qtype) = qtype;
-    dns_question_member(q_list[0], qname) = "name";
+    //dns_question_member(q_list[0], qtype) = qtype;
+    //dns_question_member(q_list[0], qname) = "name";
 
     ///Sendto
     printf("Sending Packet\n");
@@ -121,11 +121,22 @@ void dns_get_host_ip(char *host, RR_QTYPE_t qtype)
     printf("\n%u\n", ((((u16_t) buf[locate]) << 8) + buf[locate + 1]) & compression_mask);
     printf("\n%s\n", &buf[((((u16_t) buf[locate]) << 8) + buf[locate + 1]) & compression_mask]);
 
-    char *ht = (char *) malloc(50 * sizeof(char));
+    //char *ht = (char *) malloc(50 * sizeof(char));
 
-    dns_to_host_name(ht, buf, &locate);
+    //dns_to_host_name(ht, buf, &locate);
 
-    printf("\n%s\n", ht);
+    //printf("\n%s\n", ht);
+
+    rr_new(ans);
+    rr_locate(ans, &buf[locate]);
+    //ans->name = (char *) &buf[locate];
+
+    if( is_compressive(&buf[locate]))
+        rr_locate1(ans, &buf[locate + 2]);
+    else
+        rr_locate1(ans, &buf[locate + strlen((char *) &buf[locate]) + 1]);
+
+    rr_show(ans, buf, &locate);
 
     /*
     dns_answer_declare(ans[20]);

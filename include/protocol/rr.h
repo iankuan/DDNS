@@ -78,7 +78,7 @@
  *  RDLENGTH        an unsigned 16 bit integer that specifies the length in
  *                  octets of the RDATA field.
  */
-typedef s32_t TTL_t;///ttl
+typedef u32_t TTL_t;///ttl
 
 ///rr_format
 /*typedef struct _RR {
@@ -108,10 +108,11 @@ typedef struct _RR_ptr {
  */
 #define rr_declare(var) _declare(RR_ptr_t *, var)
 
-                                        ///same as DNS_QUESTION_t
 #define rr_locate(var, locate) _locate(var->name, locate)
 
-#define rr_new(var) _new(RR_ptr_t, var)
+#define rr_locate1(var, locate) _locate(var->rr, locate)
+
+#define rr_new(var) _new(RR_ptr_t *, var)
 
 #define rr_assign(var, _name, _type, _class, _ttl, _rd_len, _rdata)\
     ({\
@@ -136,17 +137,26 @@ typedef struct _RR_ptr {
 /**
  * RR Member
  */
-#define rr_member(_struct, member)\
-    rr_member_ ## member(_struct, member)
+#define rr_member(_struct, member, _VA_ARGS_)\
+    rr_member_ ## member(_struct, member, _VA_ARGS_)
 
-#define rr_member_name(_struct, member)\
-    _struct->member
+#define rr_member_name(_struct, member, _VA_ARGS_)\
+    _VA_ARGS_(_struct->member)
 
-#define rr_member_type(_struct, member)\
-    _struct->question->member
+#define rr_member_type(_struct, member, _VA_ARGS_)\
+    _VA_ARGS_(_struct->rr->member)
 
-#define rr_member_class(_struct, member)\
-    _struct->question->member
+#define rr_member_class(_struct, member, _VA_ARGS_)\
+    _VA_ARGS_(_struct->rr->member)
+
+#define rr_member_ttl(_struct, member, _VA_ARGS_)\
+    _VA_ARGS_(_struct->rr->ttl)
+
+#define rr_member_rdlen(_struct, member, _VA_ARGS_)\
+    _VA_ARGS_(_struct->rr->member)
+
+#define rr_member_rdata(_struct, member, _VA_ARGS_)\
+    _VA_ARGS_(_struct->rr->member)
 
 ///FIXME: strcmp("qname", #member) also extend two condition!!!
 /*#define rr_member(_struct, member)\
@@ -164,3 +174,20 @@ typedef struct _RR_ptr {
         else\
         _struct->member;\
     })*/
+
+
+/*DNS_QUESTION_t*/
+/*
+                         ///same as DNS_QUESTION_t
+#define rr_member(_struct, member, _VA_ARGS_)\
+    rr_member_ ## member(_struct, member, _VA_ARGS_)
+
+#define rr_member_name(_struct, member, _VA_ARGS_)\
+    _VA_ARGS_(_struct->member)
+
+#define rr_member_type(_struct, member, _VA_ARGS_)\
+    _VA_ARGS_(_struct->question->member)
+
+#define rr_member_class(_struct, member, _VA_ARGS_)\
+    _VA_ARGS_(_struct->question->member)
+*/

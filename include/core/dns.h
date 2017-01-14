@@ -150,3 +150,21 @@ void resolve_message(uchar *buf)
     locate += (int) sizeof(header);
     dns_header_show(header);
 }
+
+void rr_show(RR_ptr_t *rr, uchar *buf, size_t *locate)
+{
+    printf("**RR_ptr_t %p**\n", rr);
+
+    size_t tmp = *locate;
+
+    char *host = (char *) malloc(NAME_LIMIT * sizeof(char));
+    dns_to_host_name(host, buf, &tmp);
+
+    printf("RR->name = %s\n", host);
+    printf("RR->rr->type = %hu(%s)\n", rr_member(rr, type, ntohs), _RR_TYPE[rr_member(rr, type, ntohs)]);
+    printf("RR->rr->class = %hu(%s)\n", rr_member(rr, class, ntohs), _RR_CLASS[rr_member(rr, class, ntohs)]);
+    printf("RR->rr->ttl = %u\n", rr_member(rr, ttl, ntohl));
+
+    //rd_show();
+   
+}
