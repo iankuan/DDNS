@@ -15,6 +15,7 @@
 #define TTL_LIMIT    32
 #define UDP_LIMIT   512
 
+#define BUF_SIZE 10000
 /**
  * **FILE** 
  */

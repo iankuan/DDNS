@@ -436,7 +436,7 @@ typedef struct _DNS_QUESTION_ptr {
     _s;})
 
 /**
- * RR Member
+ * DNS Question Member
  */
 #define dns_question_member(_struct, member)\
     dns_question_member_ ## member(_struct, member)
@@ -546,6 +546,10 @@ typedef struct _DNS_QUESTION_ptr {
     rr_locate_assign(var, locate, _qname, _qtype, _qclass)
 #define dns_additional_member(_struct, member)\
     rr_member(_struct, member)
+
+///Anwser Member
+///Authority Member
+///Additional Member
 
 /**
  * 4.1.4. Message compression

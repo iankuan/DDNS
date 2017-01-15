@@ -8,11 +8,11 @@ INC_DIR = include
 SRC_DIR = src
 TEST_DIR = test
 
-TEST_SRC =
+TEST_SRC = test_resolver.c
 LIB = 
 
 OBJ = 
-EXEC =
+EXEC = dns_main
 TEST = 
 
 #Addition FLAGS
@@ -20,10 +20,16 @@ CFLAGS += -I $(INC_DIR)
 LFLAGS +=
 
 vpath %.c $(SRC_DIR)
+
+ifndef TEST_SRC
 TEST_SRC = $(wildcard $(TEST_DIR)/*.c)
+else
+TEST_SRC := $(addprefix $(TEST_DIR)/, $(TEST_SRC))
+endif
 TEST = $(patsubst %.c, %.out, $(TEST_SRC))
+
 OBJ_SRC = $(wildcard $(SRC_DIR)/utility/*.c)
-OBJ = $(patsubst %.c, %.o, $(OBJ_SRC))
+OBJ = $(patsubst %.c, %.o, $(OBJ_SRC)) src/dns_main.o
 
 #Debug FLAGS
 ifeq ($(strip $(DEBUG)), 1)

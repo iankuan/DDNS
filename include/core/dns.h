@@ -9,18 +9,20 @@
  *      foreign name servers.
  */
 #include "protocol/message.h"
+#include "dns_util.h"
+#include "dns_impl.h"
 #include "debug.h"
 
-#define BUF_SIZE 10000
+#define SERV_PORT 8008
 
 ///We use the Object-Oriened concept to build the interface of the dns server.
 struct DNS {
-    ///database
-
-    ///function
-    void (*dns_init)(char* cfg_dir);
-    /*(*query)();
-    (*response)();*/
+    //.init
+    //.init_database
+    int (*init_service)(int domain, int type, int protocol, struct sockaddr *addr, socklen_t len);
+    //.query
+    ssize_t (*listen)(int sk_fd, uchar buf[], struct sockaddr *addr, socklen_t *len);
+    void (*respond)(int sk_fd, uchar buf[], ssize_t buf_len, struct sockaddr * addr, socklen_t len);
 };
 
 void dns_header_show(DNS_HEADER_t *hdr)
@@ -63,53 +65,6 @@ void dns_header_show(DNS_HEADER_t *hdr)
     printf("Header->nscount = %hu\n", dns_header_member(hdr, nscount, ntohs));
 }*/
 
-/**
- * TODO: IMPORTANT, but why
- * This would convert "www.google.com" to "3www6google3com"
- */
-static inline
-void host_to_dns_name(char *dns, char *host)
-{
-    for(int i = 0, count = 0; i < strlen(host) + 1; i++)
-    {
-        if(host[i] == '.' || host[i] == '\0')
-        {
-            *dns++ = i - count;
-            while(count < i)
-                *dns++ = host[count++];
-            count++;
-        }
-    }
-    *dns = '\0';
-}
-
-static inline
-void dns_to_host_name(char *host, uchar *buf, size_t *locate)
-{
-    u16_t offset = 0xFFFF;
-    if( is_compressive(&buf[*locate])) {
-        offset = ((((u16_t) buf[*locate]) << 8) + buf[*locate + 1]) & compression_mask;
-        *locate += 2;
-    }
-    else
-        *locate += strlen((char *) &buf[*locate]) - 1;
-
-    uchar *dn = offset != 0xFFFF ? &buf[offset]: &buf[*locate];
-
-    int i = 0;
-    //Convert 3www6google3com0 to www.google.com
-    ///FIXME: Is it possible for >10
-
-    for(uchar count = dn[0]; count != 0; count = dn[i])
-    {
-        while(count-- != 0) {
-            host[i] = dn[i + 1];
-            i++;
-        }
-        host[i++] = '.';
-    }
-    host[i - 1] = '\0';
-}
 
 void dns_query(char *dns, uchar *buf, size_t len)
 {
@@ -151,6 +106,43 @@ void resolve_message(uchar *buf)
     dns_header_show(header);
 }
 
+rr_rdate_show(RR_TYPE_t type, u16_t rdlen, u32_t* rdata)
+{
+    switch(type) {
+        case _A:
+            printf("rdate = %s\n", inet_addr(rdata));
+            break;
+        case _CNAME:
+            ///printf("rdate = %s\n", rdata);
+            printf("rdate = ");
+            for(int i = 0; i < rdlen * 4; i++) putchar(*((char *) rdata + i));
+            putchar('\n');
+            break;
+        /*case _NS:
+        case _MD:
+        case _MF:
+        case _SOA:
+        case _MB:
+        case _MG:
+        case _MR:
+        case _NULL:
+        case _WKS:
+        case _PTR:
+        case _HINFO:
+        case _MINFO:
+        case _MX:
+        case _TXT:
+        case _AXFR:
+        case _MAILB:
+        case _MAILA:
+        case _wildcard:*/
+        default:
+            dlog("Cannot find the RR_TYPE corresponded to rdata\n");
+    }
+
+    return 0;
+}
+
 void rr_show(RR_ptr_t *rr, uchar *buf, size_t *locate)
 {
     printf("**RR_ptr_t %p**\n", rr);
@@ -163,8 +155,8 @@ void rr_show(RR_ptr_t *rr, uchar *buf, size_t *locate)
     printf("RR->name = %s\n", host);
     printf("RR->rr->type = %hu(%s)\n", rr_member(rr, type, ntohs), _RR_TYPE[rr_member(rr, type, ntohs)]);
     printf("RR->rr->class = %hu(%s)\n", rr_member(rr, class, ntohs), _RR_CLASS[rr_member(rr, class, ntohs)]);
-    printf("RR->rr->ttl = %u\n", rr_member(rr, ttl, ntohl));
+    printf("RR->rr->ttl = %u\n", rr_member(rr, ttl));
+    printf("RR->rr->rdlen = %hu\n", rr_member(rr, rdlength, ntohs));
 
-    //rd_show();
-   
+    rr_rdate_show(rr_member(rr, type, ntohs), rr_member(rr, rdlength, ntohs), rr_member(rr, rdata));
 }
