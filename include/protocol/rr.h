@@ -137,26 +137,26 @@ typedef struct _RR_ptr {
 /**
  * RR Member
  */
-#define rr_member(_struct, member, _VA_ARGS_)\
-    rr_member_ ## member(_struct, member, _VA_ARGS_)
+#define rr_member(_struct, member, ...)\
+    rr_member_ ## member(_struct, member, __VA_ARGS__)
 
-#define rr_member_name(_struct, member, _VA_ARGS_)\
-    _VA_ARGS_(_struct->member)
+#define rr_member_name(_struct, member, ...)\
+    __VA_ARGS__(_struct->member)
 
-#define rr_member_type(_struct, member, _VA_ARGS_)\
-    _VA_ARGS_(_struct->rr->member)
+#define rr_member_type(_struct, member, ...)\
+    __VA_ARGS__(_struct->rr->member)
 
-#define rr_member_class(_struct, member, _VA_ARGS_)\
-    _VA_ARGS_(_struct->rr->member)
+#define rr_member_class(_struct, member, ...)\
+    __VA_ARGS__(_struct->rr->member)
 
-#define rr_member_ttl(_struct, member, _VA_ARGS_)\
-    _VA_ARGS_(_struct->rr->ttl)
+#define rr_member_ttl(_struct, member, ...)\
+    __VA_ARGS__(_struct->rr->member)
 
-#define rr_member_rdlen(_struct, member, _VA_ARGS_)\
-    _VA_ARGS_(_struct->rr->member)
+#define rr_member_rdlength(_struct, member, ...)\
+    __VA_ARGS__(_struct->rr->member)
 
-#define rr_member_rdata(_struct, member, _VA_ARGS_)\
-    _VA_ARGS_(_struct->rr->member)
+#define rr_member_rdata(_struct, member, ...)\
+    __VA_ARGS__(_struct->rr->member)
 
 ///FIXME: strcmp("qname", #member) also extend two condition!!!
 /*#define rr_member(_struct, member)\
