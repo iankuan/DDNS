@@ -95,8 +95,8 @@ typedef struct _RR {
     RR_CLASS_t   class;
     TTL_t   ttl;
     u16_t   rdlength;
-    u32_t   rdata[0];
-} RR_t;
+    uchar   rdata[0];
+}__attribute__((packed)) RR_t;
 
 typedef struct _RR_ptr {
     char    *name;

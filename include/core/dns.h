@@ -106,19 +106,24 @@ void resolve_message(uchar *buf)
     dns_header_show(header);
 }
 
-rr_rdate_show(RR_TYPE_t type, u16_t rdlen, u32_t* rdata)
+rr_rdate_show(RR_TYPE_t type, u16_t rdlen, uchar* rdata)
 {
+    char *data = (char *) malloc(rdlen + 1);
+    strncpy(data, rdata, rdlen);
+    data[rdlen] = '\0';
+
     switch(type) {
         case _A:
-            printf("rdate = %s\n", inet_addr(rdata));
+            printf("rdate = %s\n", inet_ntoa(*((struct in_addr*) data)));
             break;
+        case _NS:
         case _CNAME:
             ///printf("rdate = %s\n", rdata);
             printf("rdate = ");
-            for(int i = 0; i < rdlen * 4; i++) putchar(*((char *) rdata + i));
+            for(int i = 0; i < rdlen * 4; i++) putchar(*((char *) data + i));
             putchar('\n');
             break;
-        /*case _NS:
+        /*
         case _MD:
         case _MF:
         case _SOA:
@@ -155,7 +160,7 @@ void rr_show(RR_ptr_t *rr, uchar *buf, size_t *locate)
     printf("RR->name = %s\n", host);
     printf("RR->rr->type = %hu(%s)\n", rr_member(rr, type, ntohs), _RR_TYPE[rr_member(rr, type, ntohs)]);
     printf("RR->rr->class = %hu(%s)\n", rr_member(rr, class, ntohs), _RR_CLASS[rr_member(rr, class, ntohs)]);
-    printf("RR->rr->ttl = %u\n", rr_member(rr, ttl));
+    printf("RR->rr->ttl = %u\n", rr_member(rr, ttl, ntohl));
     printf("RR->rr->rdlen = %hu\n", rr_member(rr, rdlength, ntohs));
 
     rr_rdate_show(rr_member(rr, type, ntohs), rr_member(rr, rdlength, ntohs), rr_member(rr, rdata));

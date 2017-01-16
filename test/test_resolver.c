@@ -19,6 +19,7 @@ void dns_get_host_ip(char *host, RR_QTYPE_t qtype);
 int main(int argc, char **argv)
 {
     char host[] = "www.google.com";
+    //char host[] = "CSNA2016.P76041360.imslab.org";
 
     //Get DNS servers from resolv.conf file
     //TODO: automatical not maunal
