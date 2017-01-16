@@ -114,6 +114,8 @@ typedef struct _RR_ptr {
 
 #define rr_new(var) _new(RR_ptr_t *, var)
 
+#define rr_malloc(var) _malloc(RR_ptr_t *, var)
+
 #define rr_assign(var, _name, _type, _class, _ttl, _rd_len, _rdata)\
     ({\
     strcpy(var->name, _name); \

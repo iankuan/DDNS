@@ -106,23 +106,51 @@ void resolve_message(uchar *buf)
     dns_header_show(header);
 }
 
-rr_rdate_show(RR_TYPE_t type, u16_t rdlen, uchar* rdata)
+void rr_rdate_show(RR_TYPE_t type, u16_t rdlen, uchar *rdata, uchar* buf, size_t *locate)
 {
-    char *data = (char *) malloc(rdlen + 1);
-    strncpy(data, rdata, rdlen);
-    data[rdlen] = '\0';
-
+    size_t _tmp = 0;
     switch(type) {
         case _A:
-            printf("rdate = %s\n", inet_ntoa(*((struct in_addr*) data)));
+            printf("rdate = %s\n", inet_ntoa(*((struct in_addr*) rdata)));
             break;
         case _NS:
         case _CNAME:
+            /*uchar *host;
+            if(is_compressive(rdata)) {
+                size_t tmp = *locate;
+                uchar *host = (uchar *) malloc(NAME_LIMIT);
+                dns_to_host_name(host, buf, &tmp);
+            }
+            else {
+                uchar *host = (uchar *) malloc(rdlen + 1);
+                host[rdlen] = '\0';
+                strncpy(host, rdata, rdlen);
+            }*/
+
+        {
+            _tmp = *locate;
+
+            char *_host = (char *) malloc(NAME_LIMIT * sizeof(char));
+            //printf("rdate = %s\n", _host);
+            dns_to_host_name(_host, buf, &_tmp);
+
+            printf("rdate = %s\n", _host);
+
+
+            /*
+            char data;
+            char *ptr;
+                ptr = (&buf[((((u16_t) buf[locate]) << 8) + buf[locate + 1]) & compression_mask]);
+            //data[rdlen] = '\0';
+
             ///printf("rdate = %s\n", rdata);
             printf("rdate = ");
             for(int i = 0; i < rdlen * 4; i++) putchar(*((char *) data + i));
-            putchar('\n');
+            putchar('\n');*/
+
+            //free(host);
             break;
+        }
         /*
         case _MD:
         case _MF:
@@ -143,25 +171,32 @@ rr_rdate_show(RR_TYPE_t type, u16_t rdlen, uchar* rdata)
         case _wildcard:*/
         default:
             dlog("Cannot find the RR_TYPE corresponded to rdata\n");
+            break;
     }
 
-    return 0;
+    *locate += rdlen;
+    ///return 0;
 }
 
 void rr_show(RR_ptr_t *rr, uchar *buf, size_t *locate)
 {
     printf("**RR_ptr_t %p**\n", rr);
 
-    size_t tmp = *locate;
+    size_t _tmp = *locate;
 
-    char *host = (char *) malloc(NAME_LIMIT * sizeof(char));
-    dns_to_host_name(host, buf, &tmp);
+    char *_host = (char *) malloc(NAME_LIMIT * sizeof(char));
+    dns_to_host_name(_host, buf, &_tmp);
 
-    printf("RR->name = %s\n", host);
+    printf("RR->name = %s\n", _host);
     printf("RR->rr->type = %hu(%s)\n", rr_member(rr, type, ntohs), _RR_TYPE[rr_member(rr, type, ntohs)]);
     printf("RR->rr->class = %hu(%s)\n", rr_member(rr, class, ntohs), _RR_CLASS[rr_member(rr, class, ntohs)]);
     printf("RR->rr->ttl = %u\n", rr_member(rr, ttl, ntohl));
     printf("RR->rr->rdlen = %hu\n", rr_member(rr, rdlength, ntohs));
 
-    rr_rdate_show(rr_member(rr, type, ntohs), rr_member(rr, rdlength, ntohs), rr_member(rr, rdata));
+    _tmp += sizeof(RR_t);
+    *locate = _tmp + rr_member(rr, rdlength, ntohs);
+
+    rr_rdate_show(rr_member(rr, type, ntohs), rr_member(rr, rdlength, ntohs), rr_member(rr, rdata), buf, &_tmp);
+
+    //*locate = *locate + sizeof(RR_t) + rr_member(rr, rdlength, ntohs);
 }

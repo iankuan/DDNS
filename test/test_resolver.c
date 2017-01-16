@@ -18,8 +18,9 @@ void dns_get_host_ip(char *host, RR_QTYPE_t qtype);
 
 int main(int argc, char **argv)
 {
-    char host[] = "www.google.com";
+    //char host[] = "www.google.com";
     //char host[] = "CSNA2016.P76041360.imslab.org";
+    char host[] = "CSNA2016.F74026103.imslab.org";
 
     //Get DNS servers from resolv.conf file
     //TODO: automatical not maunal
@@ -128,17 +129,82 @@ void dns_get_host_ip(char *host, RR_QTYPE_t qtype)
 
     //printf("\n%s\n", ht);
 
-    rr_new(ans);
-    rr_locate(ans, &buf[locate]);
+    /*rr_new(ans);
+    rr_locate(ans, &buf[locate]);*/
     //ans->name = (char *) &buf[locate];
 
-    if( is_compressive(&buf[locate]))
+    /*if( is_compressive(&buf[locate]))
         rr_locate1(ans, &buf[locate + 2]);
     else
         rr_locate1(ans, &buf[locate + strlen((char *) &buf[locate]) + 1]);
 
-    rr_show(ans, buf, &locate);
+    rr_show(ans, buf, &locate);*/
 
+    //rr_declare(ans[dns_header_member(hdr, qdcount, ntohs)]);
+    rr_declare(ans[dns_header_member(hdr, ancount, ntohs)]);
+    rr_declare(auth[dns_header_member(hdr, nscount, ntohs)]);
+    rr_declare(add[dns_header_member(hdr, arcount, ntohs)]);
+
+    printf("\n************\nAnswer Section\n************\n");
+    for(int i = 0; i < dns_header_member(hdr, ancount, ntohs); i++)
+    {
+        rr_malloc(ans[i]);
+        rr_locate(ans[i], &buf[locate]);
+        ans[i]->name = (char *) &buf[locate];
+
+        if( is_compressive(&buf[locate]))
+            rr_locate1(ans[i], &buf[locate + 2]);
+        else
+            rr_locate1(ans[i], &buf[locate + strlen((char *) &buf[locate]) + 1]);
+        rr_show(ans[i], buf, &locate);
+        printf("\n");
+    }
+
+    /*printf("\n************\nNameSpace Section\n************\n");
+    for(int i = 0; i < dns_header_member(hdr, nscount, ntohs); i++)
+    {
+        rr_malloc(ns[i]);
+        rr_locate(ns[i], &buf[locate]);
+        ns[i]->name = (char *) &buf[locate];
+
+        if( is_compressive(&buf[locate]))
+            rr_locate1(ns[i], &buf[locate + 2]);
+        else
+            rr_locate1(ns[i], &buf[locate + strlen((char *) &buf[locate]) + 1]);
+        rr_show(ns[i], buf, &locate);
+    }*/
+
+    printf("\n************\nAuthority Section\n************\n");
+
+    for(int i = 0; i < dns_header_member(hdr, nscount, ntohs); i++)
+    {
+        rr_malloc(auth[i]);
+        rr_locate(auth[i], &buf[locate]);
+        auth[i]->name = (char *) &buf[locate];
+
+        if( is_compressive(&buf[locate]))
+            rr_locate1(auth[i], &buf[locate + 2]);
+        else
+            rr_locate1(auth[i], &buf[locate + strlen((char *) &buf[locate]) + 1]);
+        rr_show(auth[i], buf, &locate);
+        printf("\n");
+    }    
+
+    printf("\n************\nAdditional Section\n************\n");
+    
+    for(int i = 0; i < dns_header_member(hdr, arcount, ntohs); i++)
+    {
+        rr_malloc(add[i]);
+        rr_locate(add[i], &buf[locate]);
+        add[i]->name = (char *) &buf[locate];
+
+        if( is_compressive(&buf[locate]))
+            rr_locate1(add[i], &buf[locate + 2]);
+        else
+            rr_locate1(add[i], &buf[locate + strlen((char *) &buf[locate]) + 1]);
+        rr_show(add[i], buf, &locate);
+        printf("\n");
+    }
     /*
     dns_answer_declare(ans[20]);
     char *reader = &buf[locate];
