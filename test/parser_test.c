@@ -1,11 +1,8 @@
-#include "debug.h"
-#include "utility/file_ops.h"
-#include "limit.h"
-#include "config.h"
-
 #include <stdio.h>
 #include <stdlib.h>
 #include <assert.h>
+
+#include "parser.h"
 
 #define Usage "./parser_test <config_directory>\n"
 
@@ -49,12 +46,24 @@ int main(int argc, char **argv)
 
     //dlog("%s\n", path[0]);
 
+    
     syserr(!fexist(path[0]), "startup doesn't exist\n");
+    
+    struct startup *stup = startup_parser(path[0]);
 //    show_startup_cfg()
     
     syserr(!fexist(path[1]), "root server doesn't exist\n");
 //    show_root_srv();
 
+    /*char **zone_path = (char **) malloc(sizeof(char *) * stup->z_count);
+
+    for(int i = 0; i < stup->z_count; i++) zone_path[i] = (char *) malloc( PATH_LIMIT * sizeof(char));
+
+    apen_dir_file(dir, stup->zone_path, stup->z_count, zone_path);
+    for(int i = 0; i < stup->z_count; i++)
+    {
+        startup_parser(zone_path[i]);
+    }*/
 
 //    show_zone_rr();
 }

@@ -8,7 +8,7 @@ INC_DIR = include
 SRC_DIR = src
 TEST_DIR = test
 
-TEST_SRC = test_resolver.c
+#TEST_SRC = test_resolver.c
 LIB = 
 
 OBJ = 
@@ -29,7 +29,8 @@ endif
 TEST = $(patsubst %.c, %.out, $(TEST_SRC))
 
 OBJ_SRC = $(wildcard $(SRC_DIR)/utility/*.c)
-OBJ = $(patsubst %.c, %.o, $(OBJ_SRC)) src/dns_main.o
+OBJ = $(patsubst %.c, %.o, $(OBJ_SRC)) parser.o
+#src/dns_main.o
 
 #Debug FLAGS
 ifeq ($(strip $(DEBUG)), 1)
